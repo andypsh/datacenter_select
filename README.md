@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](#)
 
 **🚀 Live Demo**: https://datacenter-select-ds9x.vercel.app
-**📑 기술문서**: [docs/index.html](docs/index.html)
+**📑 기술문서 (라이브)**: https://datacenter-select-ds9x.vercel.app/docs/
 **📁 GitHub**: [contest-v2-14th](https://github.com/andypsh/datacenter_select/tree/contest-v2-14th)
 
 ---
@@ -86,7 +86,9 @@ V1 통합 CSV       ├──▶│  build_scores.py    │───▶│  regi
 datacenter_contest/
 ├── README.md                          # 본 문서
 ├── docs/
-│   └── index.html                     # 기술문서 (1페이지 SPA)
+│   └── index.html                     # 기술문서 (1페이지 SPA, source-of-truth)
+│                                      # → Vercel에는 frontend/public/docs/ 로 복사되어 서빙됨
+│                                      # → 라이브: /docs/ 경로로 접근
 ├── 00_공모전정보/
 │   └── 14회_요강.md                   # 14회 공모전 요강·과거 수상작
 ├── 01_프로젝트기획/
