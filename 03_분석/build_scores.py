@@ -24,12 +24,16 @@ from pathlib import Path
 import pandas as pd
 
 from coords import COORDS
+from derived import (
+    industry_cluster_real,
+    industry_raw_count,
+    power_stability_real,
+    telecom_infra_real,
+)
 from extra_data import (
-    it_workforce,
-    power_stability,
-    regional_vitality,
-    renewable_access,
-    telecom_infra,
+    it_workforce,  # proxy (KOSIS 실데이터 교체 TODO)
+    regional_vitality,  # 행안부 89개 인구감소지역 (공식)
+    renewable_access,  # proxy (KEA 실데이터 교체 TODO)
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,7 +45,7 @@ FACTORS = [
     {
         "key": "power_stability", "label": "전력 안정성", "unit": "점",
         "direction": "higher_is_better", "default_weight": 18,
-        "desc": "변전소·송전망 인프라 (KEPCO+KPX, V2 proxy)",
+        "desc": "V1 전력사용량 시계열 (평균·추세·변동성) 합성",
         "category": "전력",
     },
     {
@@ -65,13 +69,13 @@ FACTORS = [
     {
         "key": "companies", "label": "산업 집적도", "unit": "개",
         "direction": "higher_is_better", "default_weight": 10,
-        "desc": "SW·AI 기업 분포 (V1; 추후 KICOX 산단 추가)",
+        "desc": "SW회사 raw 40k에서 시군별 가중 카운트 (대=3, 중견=2, 중소=1)",
         "category": "산업",
     },
     {
         "key": "telecom_infra", "label": "통신 인프라", "unit": "점",
         "direction": "higher_is_better", "default_weight": 9,
-        "desc": "광케이블·백본망 보급 (V2 proxy)",
+        "desc": "광케이블 66 노드 → 시군 50/100km 인접도 점수",
         "category": "통신",
     },
     {
@@ -128,12 +132,15 @@ def main() -> int:
         disaster = (eq + ty) / 2.0
 
         factors_value = {
-            "power_stability": round(power_stability(name), 2),
+            # 실데이터 파생 (derived.py)
+            "power_stability": round(power_stability_real(name), 2),
+            "telecom_infra": round(telecom_infra_real(name), 2),
+            "companies": industry_raw_count(name) or int(row["companies"]),
+            # V1 그대로
             "disaster_risk": round(disaster, 4),
             "temp": round(float(row["temp"]), 3),
             "price": round(float(row["price"]), 1),
-            "companies": int(row["companies"]),
-            "telecom_infra": round(telecom_infra(name), 2),
+            # 아직 proxy (다음 라운드 교체 대상)
             "it_workforce": round(it_workforce(name), 2),
             "regional_vitality": round(regional_vitality(name), 2),
             "renewable_access": round(renewable_access(name), 2),
@@ -153,8 +160,11 @@ def main() -> int:
     payload = {
         "version": 2,
         "source": [
-            "_v1_data/06_실거래가/가중치데이터_최종.csv (5개 V1 지표)",
-            "extra_data.py (5개 신규/proxy 지표)",
+            "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가·SW기업 raw count)",
+            "_v1_data/02_계약종별전력사용량/.../2012-2022전국.csv (전력 안정성 파생)",
+            "_v1_data/04_sw기업개수/광케이블 지도/광케이블.csv (통신 인프라 파생)",
+            "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 가중 파생)",
+            "extra_data.py (IT 인력·지역활력·재생에너지 proxy)",
         ],
         "factors": FACTORS,
         "regions": regions,
