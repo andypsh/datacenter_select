@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI 데이터센터 최적입지 — 기술문서</title>
+<meta name="description" content="제14회 산업통상자원부 공공데이터 활용 아이디어 공모전 — AI 데이터센터 최적입지 분석 기술문서. 9개 지표 · 파생변수 산출 · 민감도 분석." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+<style>
+  :root {
+    --bg: #0b1220;
+    --bg-2: #0d1628;
+    --bg-3: #111f3a;
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.16);
+    --text: #e6ecff;
+    --text-dim: #9aa6c2;
+    --text-faint: #6b7280;
+    --accent: #60a5fa;
+    --accent-2: #34d399;
+    --accent-3: #fbbf24;
+    --accent-4: #f472b6;
+    --accent-motie: #3b82f6;
+    --warn: #fb7185;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-size: 0.88em; }
+  pre { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 0.85em; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { border-bottom: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 0.92em; }
+  th { background: rgba(255,255,255,0.04); color: var(--text-dim); font-weight: 600; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* Hero */
+  .hero {
+    padding: 60px 24px 40px;
+    background: linear-gradient(135deg, #0d1628 0%, #1e2a4d 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(96,165,250,0.15); color: var(--accent); border: 1px solid rgba(96,165,250,0.3); }
+  .badge.motie { background: rgba(59,130,246,0.2); color: #93c5fd; }
+  .badge.green { background: rgba(52,211,153,0.15); color: var(--accent-2); border-color: rgba(52,211,153,0.3); }
+  .badge.amber { background: rgba(251,191,36,0.15); color: var(--accent-3); border-color: rgba(251,191,36,0.3); }
+  .hero h1 { font-size: 2.4em; margin: 0 0 8px; font-weight: 800; letter-spacing: -0.02em; }
+  .hero .subtitle { font-size: 1.05em; color: var(--text-dim); margin-bottom: 22px; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cta { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; transition: transform .12s ease, opacity .12s; }
+  .cta.primary { background: var(--accent); color: #0b1220; }
+  .cta.secondary { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border-2); }
+  .cta:hover { transform: translateY(-1px); text-decoration: none; opacity: 0.92; }
+
+  /* TOC + content layout */
+  main { padding: 32px 0 80px; }
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; }
+  @media (max-width: 880px) { .layout { grid-template-columns: 1fr; } .toc { display: none; } }
+  .toc { position: sticky; top: 20px; align-self: start; font-size: 0.86em; line-height: 1.9; }
+  .toc h4 { color: var(--text-dim); font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 8px; }
+  .toc a { color: var(--text-dim); display: block; padding: 2px 0; border-left: 2px solid transparent; padding-left: 10px; margin-left: -12px; }
+  .toc a:hover { color: var(--text); border-left-color: var(--accent); text-decoration: none; }
+
+  section { margin-bottom: 48px; scroll-margin-top: 20px; }
+  section h2 { font-size: 1.5em; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--border-2); display: flex; align-items: center; gap: 8px; }
+  section h2 .num { color: var(--text-faint); font-weight: 400; font-size: 0.7em; }
+  section h3 { font-size: 1.1em; margin: 24px 0 10px; color: var(--text); }
+
+  /* Stat cards */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
+  .stat { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stat .num { font-size: 1.9em; font-weight: 800; color: var(--accent); line-height: 1.1; }
+  .stat .num.green { color: var(--accent-2); }
+  .stat .num.amber { color: var(--accent-3); }
+  .stat .num.pink { color: var(--accent-4); }
+  .stat .label { font-size: 0.78em; color: var(--text-dim); margin-top: 4px; }
+
+  /* Flow diagram */
+  .flow {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 22px 0;
+  }
+  .flow-grid { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; }
+  @media (max-width: 700px) { .flow-grid { grid-template-columns: 1fr; } .flow-arrow { transform: rotate(90deg); margin: 4px auto; } }
+  .flow-box { background: var(--bg-3); border: 1px solid var(--border-2); border-radius: 8px; padding: 12px 14px; text-align: center; font-size: 0.88em; }
+  .flow-box strong { display: block; color: var(--accent); margin-bottom: 4px; font-size: 0.95em; }
+  .flow-box .desc { color: var(--text-dim); font-size: 0.82em; line-height: 1.4; }
+  .flow-arrow { font-size: 1.4em; color: var(--text-faint); text-align: center; }
+
+  /* Indicator grid */
+  .ind-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 16px 0; }
+  .ind { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .ind h4 { margin: 0 0 6px; font-size: 0.98em; display: flex; align-items: center; gap: 8px; }
+  .ind .desc { color: var(--text-dim); font-size: 0.85em; margin-bottom: 6px; }
+  .ind .formula { background: rgba(0,0,0,0.3); border-radius: 6px; padding: 6px 9px; font-family: 'JetBrains Mono', monospace; font-size: 0.78em; color: var(--accent-2); }
+
+  /* Result tables */
+  .result-table th:first-child, .result-table td:first-child { text-align: center; color: var(--text-faint); width: 40px; }
+  .result-table .city { font-weight: 600; }
+  .result-table .score { font-family: 'JetBrains Mono', monospace; color: var(--accent); text-align: right; }
+  .result-table .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; margin-left: 6px; }
+  .result-table .tag.metro { background: rgba(167,139,250,0.18); color: #c4b5fd; }
+  .result-table .tag.decline { background: rgba(251,191,36,0.18); color: #fcd34d; }
+
+  /* Scenario comparison */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  @media (max-width: 700px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .scenario h4 { margin: 0 0 8px; font-size: 0.95em; }
+  .scenario.star { border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.05); }
+  .scenario.star h4 { color: var(--accent-3); }
+  .scenario ol { margin: 0; padding-left: 20px; font-size: 0.88em; }
+  .scenario li { margin-bottom: 4px; }
+  .scenario .score-inline { font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-size: 0.85em; }
+
+  /* Policy list */
+  .policy { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; display: flex; gap: 14px; align-items: flex-start; }
+  .policy .n { font-size: 1.6em; font-weight: 800; color: var(--accent); width: 24px; flex-shrink: 0; }
+  .policy h4 { margin: 0 0 6px; font-size: 0.98em; }
+  .policy .body { color: var(--text-dim); font-size: 0.88em; line-height: 1.55; }
+  .policy .target { margin-top: 6px; font-size: 0.78em; color: var(--text-faint); }
+  .policy .target b { color: var(--text-dim); }
+
+  /* Footer */
+  footer { text-align: center; color: var(--text-faint); font-size: 0.82em; padding: 30px 0; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="container">
+    <div class="badge-row">
+      <span class="badge motie">제14회 산업통상자원부 공공데이터 공모전</span>
+      <span class="badge">제품·서비스 개발 부문</span>
+      <span class="badge green">109 시군 × 9 지표</span>
+      <span class="badge amber">Live on Vercel</span>
+    </div>
+    <h1>🗺️ AI 데이터센터 최적입지 — 기술문서</h1>
+    <div class="subtitle">지역균형 발전 관점의 다기준 입지 평가 + 인터랙티브 의사결정 지원</div>
+    <div class="cta-row">
+      <a class="cta primary" href="https://datacenter-select-ds9x.vercel.app" target="_blank" rel="noopener">🚀 라이브 데모 열기</a>
+      <a class="cta secondary" href="https://github.com/andypsh/datacenter_select/tree/contest-v2-14th" target="_blank" rel="noopener">📁 GitHub (contest-v2-14th)</a>
+      <a class="cta secondary" href="../README.md">📄 README</a>
+      <a class="cta secondary" href="../05_보고서/보고서.md">📑 보고서 (8장)</a>
+    </div>
+  </div>
+</section>
+
+<main>
+  <div class="container layout">
+
+    <nav class="toc">
+      <h4>목차</h4>
+      <a href="#overview">1. 한눈에 보기</a>
+      <a href="#flow">2. 데이터 분석 흐름</a>
+      <a href="#data">3. 9개 평가지표</a>
+      <a href="#derive">4. 파생변수 산출</a>
+      <a href="#method">5. 스코어링 방법론</a>
+      <a href="#results">6. 핵심 결과</a>
+      <a href="#sensitivity">7. 민감도 분석</a>
+      <a href="#policy">8. 정책 제언</a>
+      <a href="#stack">9. 기술 스택</a>
+      <a href="#reproduce">10. 재현 방법</a>
+    </nav>
+
+    <div>
+
+      <!-- 1. Overview -->
+      <section id="overview">
+        <h2><span class="num">01</span> 한눈에 보기</h2>
+        <p>AI 산업 전환기, 데이터센터의 수도권 집중과 전력 송전망 부담을 해소하기 위한 <strong>다기준 입지 평가 모델</strong>이다. 산업통상부 산하 공공데이터를 활용해 9개 지표를 산출하고, 정책 담당자가 직접 가중치를 조절하며 후보지를 탐색할 수 있는 <strong>인터랙티브 웹앱</strong>으로 제공한다.</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="num">109</div>
+            <div class="label">분석 대상 시군</div>
+          </div>
+          <div class="stat">
+            <div class="num green">9</div>
+            <div class="label">평가 지표</div>
+          </div>
+          <div class="stat">
+            <div class="num amber">3/9</div>
+            <div class="label">산업부 산하 데이터</div>
+          </div>
+          <div class="stat">
+            <div class="num pink">18</div>
+            <div class="label">민감도 시나리오</div>
+          </div>
+        </div>
+
+        <h3>왜 이 접근인가</h3>
+        <table>
+          <thead><tr><th>차원</th><th>일반 입지 분석</th><th>본 프로젝트</th></tr></thead>
+          <tbody>
+            <tr><td>지표</td><td>5~7개 / 산업부 관점 약함</td><td><strong>9개</strong> + 지역활력 지표 신규</td></tr>
+            <tr><td>가중치</td><td>고정 (보고서 작성 시점)</td><td><strong>실시간 슬라이더 + 시나리오 3종</strong></td></tr>
+            <tr><td>견고성</td><td>검증 없음</td><td><strong>±20% × 9지표 = 18 시나리오 민감도</strong></td></tr>
+            <tr><td>결과물</td><td>PDF</td><td><strong>인터랙티브 웹앱 + 자동 정책 제언</strong></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 2. Flow -->
+      <section id="flow">
+        <h2><span class="num">02</span> 데이터 분석 흐름</h2>
+        <div class="flow">
+          <div class="flow-grid">
+            <div class="flow-box">
+              <strong>Raw Data</strong>
+              <div class="desc">광케이블 66 / 데이터센터 89 / 인구감소 89 / 재생E 허브 8 / 기상청 재해</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>derive_indicators.py</strong>
+              <div class="desc">Haversine 거리 + Min-Max 정규화 → 4 V2 지표</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>indicators_v2.csv</strong>
+              <div class="desc">109 시군 × (power, industry, vitality, renewable)</div>
+            </div>
+          </div>
+
+          <div style="height: 14px;"></div>
+
+          <div class="flow-grid">
+            <div class="flow-box">
+              <strong>V1 통합 CSV</strong>
+              <div class="desc">5개 지표 (기온·재해·기업·실거래가)</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>build_scores.py</strong>
+              <div class="desc">9개 지표 통합 → 메타데이터 부착 (산업부 산하 여부 등)</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>regions.json</strong>
+              <div class="desc">109 × 9 + 시군 좌표 + 인구감소·수도권 플래그</div>
+            </div>
+          </div>
+
+          <div style="height: 14px;"></div>
+
+          <div class="flow-grid">
+            <div class="flow-box">
+              <strong>Vue 3 Dashboard</strong>
+              <div class="desc">MapLibre 지도 + 슬라이더 9개 + ECharts 차트 + 정책탭</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>Vercel</strong>
+              <div class="desc">git push 시 ~20초 자동 빌드·재배포 (Node 20)</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <strong>Live Dashboard</strong>
+              <div class="desc">datacenter-select-ds9x.vercel.app</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="color: var(--text-dim); font-size: 0.9em;">분석 파이프라인이 완전히 코드화되어 있어 raw 데이터가 갱신되면 <code>python derive_indicators.py &amp;&amp; python build_scores.py</code> 두 줄로 전 라이브 사이트가 자동 업데이트된다.</p>
+      </section>
+
+      <!-- 3. Data -->
+      <section id="data">
+        <h2><span class="num">03</span> 9개 평가지표</h2>
+        <table>
+          <thead><tr><th>#</th><th>지표</th><th>방향</th><th>출처</th><th>산업부 산하</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>전력 공급 안정성</td><td>↑</td><td>KEPCO 광케이블 백본</td><td><span class="badge motie">산업부</span></td></tr>
+            <tr><td>2</td><td>평균기온 (냉각)</td><td>↓</td><td>기상청</td><td>-</td></tr>
+            <tr><td>3</td><td>지진 위험도</td><td>↓</td><td>기상청 z-score</td><td>-</td></tr>
+            <tr><td>4</td><td>태풍 위험도</td><td>↓</td><td>기상청 z-score</td><td>-</td></tr>
+            <tr><td>5</td><td>토지 비용</td><td>↓</td><td>국토부 실거래가</td><td>-</td></tr>
+            <tr><td>6</td><td>산업 집적도</td><td>↑</td><td>기존 IDC 분포 + KICOX</td><td><span class="badge motie">산업부</span></td></tr>
+            <tr><td>7</td><td>SW 기업 수</td><td>↑</td><td>통계청 KOSIS</td><td>-</td></tr>
+            <tr><td>8</td><td>지역활력 기여도</td><td>↑</td><td>행안부 인구감소 + GRDP</td><td>-</td></tr>
+            <tr><td>9</td><td>재생에너지 접근성</td><td>↑</td><td>KEA + 한전 발전소</td><td><span class="badge motie">산업부</span></td></tr>
+          </tbody>
+        </table>
+        <p style="color: var(--text-dim); font-size: 0.9em;">↑ = 높을수록 좋음 / ↓ = 낮을수록 좋음 (정규화 시 1−x 반전)</p>
+      </section>
+
+      <!-- 4. Derive -->
+      <section id="derive">
+        <h2><span class="num">04</span> 파생변수 산출 (Derived Variables)</h2>
+        <p>본 연구의 핵심 기여 — V2 4개 신규 지표를 원본 raw 데이터에서 직접 산출. 산식이 <code>03_분석/derive_indicators.py</code> 에 공개되어 재현 가능.</p>
+
+        <div class="ind-grid">
+          <div class="ind">
+            <h4>⚡ <span>power</span></h4>
+            <div class="desc"><b>전력 공급 안정성</b> — 광케이블 백본(=통신·전력 콜로케이션 프록시)에 인접할수록 송배전 인프라 양호.</div>
+            <div class="formula">count(fiber within 30km) → Min-Max</div>
+          </div>
+          <div class="ind">
+            <h4>🏭 <span>industry</span></h4>
+            <div class="desc"><b>산업 클러스터</b> — 기존 데이터센터 인접 권역에 인력·전력·통신 인프라가 이미 갖춰져 있음.</div>
+            <div class="formula">count(DC within 30km) → Min-Max</div>
+          </div>
+          <div class="ind">
+            <h4>🌱 <span>vitality</span></h4>
+            <div class="desc"><b>지역활력 기여도</b> — DC 결핍 지역 + 인구감소지역에 데이터센터 입주 시 활력 회복 잠재력 큼.</div>
+            <div class="formula">(1 − DC밀도) × 0.6 + 인구감소 × 0.4</div>
+          </div>
+          <div class="ind">
+            <h4>☀️ <span>renewable</span></h4>
+            <div class="desc"><b>재생E 접근성</b> — 호남(태양광)·강원(풍력) 허브 거리. 가까울수록 RE100 / PPA 유리.</div>
+            <div class="formula">exp(−d / 100km) → Min-Max</div>
+          </div>
+        </div>
+
+        <h3>산출 후 분포 (109 시군 평균)</h3>
+        <pre><code>power     mean=0.304   min=0.000   max=1.000
+industry  mean=0.194   min=0.000   max=1.000
+vitality  mean=0.623   min=0.000   max=1.000
+renewable mean=0.286   min=0.000   max=1.000</code></pre>
+      </section>
+
+      <!-- 5. Method -->
+      <section id="method">
+        <h2><span class="num">05</span> 스코어링 방법론</h2>
+
+        <h3>정규화 (Min-Max)</h3>
+        <pre><code>for factor in factors:
+    values = [r.factors[factor.key] for r in regions]
+    normalized = (values - min) / (max - min)
+    if factor.direction == "lower_is_better":
+        normalized = 1 - normalized</code></pre>
+
+        <h3>가중합 스코어링</h3>
+        <pre><code>총_가중치 = Σ w_k
+종합점수_i = Σ (w_k × normalized_k_i) / 총_가중치</code></pre>
+        <p style="color: var(--text-dim); font-size: 0.9em;">사용자가 슬라이더로 w_k 를 조절하면 Pinia의 <code>computed</code> 체인이 정규화·점수·랭킹·정책제언 전부 즉시 재계산.</p>
+
+        <h3>시나리오 프리셋 3종</h3>
+        <table>
+          <thead><tr><th>프리셋</th><th>강조 지표</th><th>관점</th></tr></thead>
+          <tbody>
+            <tr><td>💰 비용 최우선</td><td>토지비 25% · 산업집적 15%</td><td>사업자 ROI</td></tr>
+            <tr><td>🛡️ 안정성 최우선</td><td>전력 25% · 재해 28%</td><td>미션 크리티컬</td></tr>
+            <tr><td>⭐ <strong>지역균형 최우선</strong></td><td><strong>지역활력 25% · 재생E 20%</strong></td><td><strong>공모전 주제 정합</strong></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 6. Results -->
+      <section id="results">
+        <h2><span class="num">06</span> 핵심 결과</h2>
+
+        <h3>기본 가중치 Top 10</h3>
+        <table class="result-table">
+          <thead><tr><th>#</th><th>시군</th><th>점수</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="city">의왕시 <span class="tag metro">수도권</span></td><td class="score">0.621</td></tr>
+            <tr><td>2</td><td class="city">과천시 <span class="tag metro">수도권</span></td><td class="score">0.610</td></tr>
+            <tr><td>3</td><td class="city">군포시 <span class="tag metro">수도권</span></td><td class="score">0.598</td></tr>
+            <tr><td>4</td><td class="city">음성군 <span class="tag decline">인구감소</span></td><td class="score">0.584</td></tr>
+            <tr><td>5</td><td class="city">괴산군 <span class="tag decline">인구감소</span></td><td class="score">0.578</td></tr>
+            <tr><td>6</td><td class="city">서천군 <span class="tag decline">인구감소</span></td><td class="score">0.577</td></tr>
+            <tr><td>7</td><td class="city">청양군 <span class="tag decline">인구감소</span></td><td class="score">0.577</td></tr>
+            <tr><td>8</td><td class="city">안산시 <span class="tag metro">수도권</span></td><td class="score">0.571</td></tr>
+            <tr><td>9</td><td class="city">횡성군 <span class="tag decline">인구감소</span></td><td class="score">0.568</td></tr>
+            <tr><td>10</td><td class="city">성남시 <span class="tag metro">수도권</span></td><td class="score">0.564</td></tr>
+          </tbody>
+        </table>
+        <p style="color: var(--text-dim); font-size: 0.9em;">기본 가중치(지역활력 15%) 기준만으로도 <strong>수도권 5 / 비수도권 5 균형</strong>, <strong>인구감소지역 5개</strong> 포함.</p>
+
+        <h3>시나리오별 Top 5 변화</h3>
+        <div class="scenario-grid">
+          <div class="scenario">
+            <h4>💰 비용 최우선</h4>
+            <ol>
+              <li>의왕시 <span class="score-inline">0.633</span></li>
+              <li>군포시 <span class="score-inline">0.626</span></li>
+              <li>과천시 <span class="score-inline">0.604</span></li>
+              <li>성남시 <span class="score-inline">0.584</span></li>
+              <li>안산시 <span class="score-inline">0.581</span></li>
+            </ol>
+          </div>
+          <div class="scenario">
+            <h4>🛡️ 안정성 최우선</h4>
+            <ol>
+              <li>의왕시 <span class="score-inline">0.701</span></li>
+              <li>과천시 <span class="score-inline">0.701</span></li>
+              <li>군포시 <span class="score-inline">0.663</span></li>
+              <li>오산시 <span class="score-inline">0.647</span></li>
+              <li>안산시 <span class="score-inline">0.643</span></li>
+            </ol>
+          </div>
+          <div class="scenario star">
+            <h4>⭐ 지역균형 최우선</h4>
+            <ol>
+              <li>신안군 <span class="score-inline">0.666</span></li>
+              <li>정읍시 <span class="score-inline">0.662</span></li>
+              <li>서천군 <span class="score-inline">0.653</span></li>
+              <li>부안군 <span class="score-inline">0.648</span></li>
+              <li>장성군 <span class="score-inline">0.647</span></li>
+            </ol>
+          </div>
+        </div>
+        <p style="color: var(--text-dim); font-size: 0.9em;"><strong>지역균형 시나리오 Top 5 = 100% 호남 인구감소지역</strong>. 가중치 한 번 클릭만으로 정책 방향 시뮬레이션 가능.</p>
+      </section>
+
+      <!-- 7. Sensitivity -->
+      <section id="sensitivity">
+        <h2><span class="num">07</span> 민감도 분석</h2>
+        <p>9개 지표 × ±20% = 18개 시나리오에서 일관되게 Top 10에 등장하는 견고한 후보지.</p>
+        <table>
+          <thead><tr><th>시군</th><th>등장 횟수</th><th>견고성</th></tr></thead>
+          <tbody>
+            <tr><td>과천 / 괴산 / 군포 / 서천 / 음성 / 의왕</td><td>18/18</td><td>★★★ 매우 견고</td></tr>
+            <tr><td>청양</td><td>17/18</td><td>★★★ 매우 견고</td></tr>
+            <tr><td>안산</td><td>16/18</td><td>★★ 견고</td></tr>
+            <tr><td>횡성</td><td>15/18</td><td>★★ 견고</td></tr>
+            <tr><td>성남</td><td>12/18</td><td>★★ 견고</td></tr>
+          </tbody>
+        </table>
+        <p style="color: var(--text-dim); font-size: 0.9em;">→ 6개 시군은 모든 가중치 변동에도 Top 10 유지. 가중치 임의 조정에도 결과의 통계적 신뢰성 확보.</p>
+      </section>
+
+      <!-- 8. Policy -->
+      <section id="policy">
+        <h2><span class="num">08</span> 정책 제언 5종</h2>
+        <p style="color: var(--text-dim); font-size: 0.9em;">대시보드 정책 탭에서 현재 가중치 기준으로 자동 생성되는 제언.</p>
+
+        <div class="policy">
+          <div class="n">1</div>
+          <div>
+            <h4>수도권 데이터센터 신규 허가 총량제</h4>
+            <div class="body">기본 가중치에서도 Top 10 중 수도권 50%. 송전망 부담 완화 위해 권역별 총량제 + 비수도권 후보지(음성·괴산) 우선 인허가.</div>
+            <div class="target"><b>대상:</b> 산업통상자원부 · 국토교통부</div>
+          </div>
+        </div>
+        <div class="policy">
+          <div class="n">2</div>
+          <div>
+            <h4>한전 송전망 확충 우선순위 = 비수도권 Top 후보지</h4>
+            <div class="body">KEPCO/KPX 데이터 기반, 음성·괴산·서천 권역에 154kV 변전소·송전선로 5년 내 확충.</div>
+            <div class="target"><b>대상:</b> 한국전력공사 · 전력거래소</div>
+          </div>
+        </div>
+        <div class="policy">
+          <div class="n">3</div>
+          <div>
+            <h4>인구감소지역 데이터센터 입주 인센티브 패키지</h4>
+            <div class="body">비수도권 Top 10 중 9개가 인구감소지역(=즉시 적용 대상). 법인세 3년 100% 감면 + 전기요금 산업용(을) + 토지비 50% 보조.</div>
+            <div class="target"><b>대상:</b> 행정안전부 · 기획재정부 · 광역 지자체</div>
+          </div>
+        </div>
+        <div class="policy">
+          <div class="n">4</div>
+          <div>
+            <h4>RE100 대응 — 재생에너지 인접 데이터센터 특구</h4>
+            <div class="body">지역균형 Top 5가 모두 호남(신안·정읍·서천·부안·장성). RE100 데이터센터 특구 + 직접 PPA 허용.</div>
+            <div class="target"><b>대상:</b> 산업통상자원부 · 한국에너지공단</div>
+          </div>
+        </div>
+        <div class="policy">
+          <div class="n">5</div>
+          <div>
+            <h4>데이터센터 폐열 활용 의무화</h4>
+            <div class="body">MW급 데이터센터는 폐열의 50% 이상을 지역난방·스마트팜으로 환원 의무화. 지역활력 + 탄소중립 동시 달성.</div>
+            <div class="target"><b>대상:</b> 산업통상자원부 · 환경부</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Stack -->
+      <section id="stack">
+        <h2><span class="num">09</span> 기술 스택</h2>
+        <table>
+          <tbody>
+            <tr><td><b>분석</b></td><td>Python 3.10 · pandas 2.2 · numpy · geopandas · openpyxl</td></tr>
+            <tr><td><b>프론트엔드</b></td><td>Vue 3.5 · Vite 6 · TypeScript 5.6 · Pinia 2.2</td></tr>
+            <tr><td><b>지도·차트</b></td><td>MapLibre GL JS 4.7 · Apache ECharts 5.5</td></tr>
+            <tr><td><b>스타일</b></td><td>Tailwind CSS 3.4 · Pretendard 폰트</td></tr>
+            <tr><td><b>배포</b></td><td>Vercel (Production Branch: <code>contest-v2-14th</code>)</td></tr>
+            <tr><td><b>데이터</b></td><td>KEPCO · 행안부 · 통계청 KOSIS · 국토부 · 기상청 · KICOX · KEA</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 10. Reproduce -->
+      <section id="reproduce">
+        <h2><span class="num">10</span> 재현 방법</h2>
+        <h3>분석</h3>
+        <pre><code>cd 03_분석
+pip install -r requirements.txt
+python derive_indicators.py     # V2 4개 파생지표
+python build_scores.py          # 9개 지표 통합
+python sensitivity_analysis.py  # 민감도 분석
+python analyze_results.py       # 결과 통계표</code></pre>
+
+        <h3>프론트엔드</h3>
+        <pre><code>cd 04_시각화/frontend
+npm install          # Node 18+ 필요
+npm run dev          # http://localhost:5173
+npm run build        # production 빌드</code></pre>
+
+        <h3>배포 (Vercel)</h3>
+        <pre><code>git push origin contest-v2-14th
+# → Vercel webhook → 약 20초 빌드 → 라이브 반영</code></pre>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    제14회 산업통상자원부 공공데이터 활용 아이디어 공모전 출품작 · 2026
+    <br/>
+    <a href="https://github.com/andypsh/datacenter_select" target="_blank" rel="noopener">github.com/andypsh/datacenter_select</a>
+    ·
+    <a href="https://datacenter-select-ds9x.vercel.app" target="_blank" rel="noopener">datacenter-select-ds9x.vercel.app</a>
+  </div>
+</footer>
+
+</body>
+</html>
