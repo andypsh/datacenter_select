@@ -27,13 +27,12 @@ from coords import COORDS
 from derived import (
     industry_cluster_real,
     industry_raw_count,
+    it_workforce_real,
     power_stability_real,
     renewable_access_real,
-    renewable_raw_count,
     telecom_infra_real,
 )
 from extra_data import (
-    it_workforce,  # proxy (KOSIS 실데이터 교체 TODO)
     regional_vitality,  # 행안부 89개 인구감소지역 (공식)
 )
 
@@ -82,7 +81,7 @@ FACTORS = [
     {
         "key": "it_workforce", "label": "IT 인력", "unit": "점",
         "direction": "higher_is_better", "default_weight": 8,
-        "desc": "IT·공학 종사자 공급 (V2 proxy)",
+        "desc": "SW회사 raw × 규모별 표준 종사자 추정 (대=1500, 중견=250, 중소=18) log합성",
         "category": "인력",
     },
     {
@@ -145,8 +144,8 @@ def main() -> int:
             "renewable_access": round(renewable_access_real(name), 2),
             # 행안부 89개 인구감소지역 (공식)
             "regional_vitality": round(regional_vitality(name), 2),
-            # 아직 proxy (KOSIS IT 종사자/GRDP 다음 라운드 교체)
-            "it_workforce": round(it_workforce(name), 2),
+            # SW회사 raw × 기업규모별 표준 종사자 추정
+            "it_workforce": round(it_workforce_real(name), 2),
         }
         assert set(factors_value.keys()) == {f["key"] for f in FACTORS}
 
@@ -166,10 +165,9 @@ def main() -> int:
             "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가)",
             "_v1_data/02_계약종별전력사용량/.../2012-2022전국.csv (전력 안정성 파생)",
             "_v1_data/04_sw기업개수/광케이블 지도/광케이블.csv (통신 인프라 파생)",
-            "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 가중 파생)",
+            "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 + IT 인력 추정 파생)",
             "02_데이터/raw/KEA_신재생/전국태양광발전소....csv (재생에너지 파생, 50k raw)",
             "행안부 89개 인구감소지역 공식 리스트 (지역활력)",
-            "extra_data.py (IT 인력 proxy — KOSIS 다음 라운드)",
         ],
         "factors": FACTORS,
         "regions": regions,

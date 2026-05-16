@@ -4,10 +4,9 @@
     "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가)",
     "_v1_data/02_계약종별전력사용량/.../2012-2022전국.csv (전력 안정성 파생)",
     "_v1_data/04_sw기업개수/광케이블 지도/광케이블.csv (통신 인프라 파생)",
-    "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 가중 파생)",
+    "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 + IT 인력 추정 파생)",
     "02_데이터/raw/KEA_신재생/전국태양광발전소....csv (재생에너지 파생, 50k raw)",
-    "행안부 89개 인구감소지역 공식 리스트 (지역활력)",
-    "extra_data.py (IT 인력 proxy — KOSIS 다음 라운드)"
+    "행안부 89개 인구감소지역 공식 리스트 (지역활력)"
   ],
   "factors": [
     {
@@ -70,7 +69,7 @@
       "unit": "점",
       "direction": "higher_is_better",
       "default_weight": 8,
-      "desc": "IT·공학 종사자 공급 (V2 proxy)",
+      "desc": "SW회사 raw × 규모별 표준 종사자 추정 (대=1500, 중견=250, 중소=18) log합성",
       "category": "인력"
     },
     {
@@ -106,7 +105,7 @@
         "price": 15387.6,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 27.55
       }
     },
     {
@@ -122,7 +121,7 @@
         "price": 16654.9,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 51.89
       }
     },
     {
@@ -138,7 +137,7 @@
         "price": 14113.9,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 42.2
       }
     },
     {
@@ -154,7 +153,7 @@
         "price": 14780.9,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 27.07
       }
     },
     {
@@ -170,7 +169,7 @@
         "price": 17664.0,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.87
       }
     },
     {
@@ -186,7 +185,7 @@
         "price": 5616.9,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": -27.55
       }
     },
     {
@@ -202,7 +201,7 @@
         "price": 44293.1,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 64.69
       }
     },
     {
@@ -218,7 +217,7 @@
         "price": 2687.1,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.22
       }
     },
     {
@@ -234,7 +233,7 @@
         "price": 11929.3,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 75.0
+        "it_workforce": 39.38
       }
     },
     {
@@ -250,7 +249,7 @@
         "price": 84954.5,
         "renewable_access": 14.87,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 50.03
       }
     },
     {
@@ -266,7 +265,7 @@
         "price": 234588.0,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 52.72
       }
     },
     {
@@ -282,7 +281,7 @@
         "price": 12902.4,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 40.02
       }
     },
     {
@@ -298,7 +297,7 @@
         "price": 40021.2,
         "renewable_access": 71.93,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 66.77
       }
     },
     {
@@ -314,7 +313,7 @@
         "price": 28319.6,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 42.3
       }
     },
     {
@@ -330,7 +329,7 @@
         "price": 5813.1,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 26.57
       }
     },
     {
@@ -346,7 +345,7 @@
         "price": 211554.7,
         "renewable_access": 32.47,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 39.24
       }
     },
     {
@@ -362,7 +361,7 @@
         "price": 19356.7,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 54.27
       }
     },
     {
@@ -378,7 +377,7 @@
         "price": 7220.0,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 21.98
       }
     },
     {
@@ -394,7 +393,7 @@
         "price": 34900.4,
         "renewable_access": 44.01,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 52.93
       }
     },
     {
@@ -410,7 +409,7 @@
         "price": 6402.8,
         "renewable_access": 86.77,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 29.25
       }
     },
     {
@@ -426,7 +425,7 @@
         "price": 6514.8,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 32.5
       }
     },
     {
@@ -442,7 +441,7 @@
         "price": 8133.6,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 53.14
       }
     },
     {
@@ -458,7 +457,7 @@
         "price": 30637.7,
         "renewable_access": 83.01,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 51.13
       }
     },
     {
@@ -474,7 +473,7 @@
         "price": 37801.8,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 48.58
       }
     },
     {
@@ -490,7 +489,7 @@
         "price": 7486.1,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 56.96
       }
     },
     {
@@ -506,7 +505,7 @@
         "price": 51330.3,
         "renewable_access": 69.24,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 51.34
       }
     },
     {
@@ -522,7 +521,7 @@
         "price": 6586.4,
         "renewable_access": 93.8,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 33.54
       }
     },
     {
@@ -538,7 +537,7 @@
         "price": 11036.5,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 34.91
       }
     },
     {
@@ -554,7 +553,7 @@
         "price": 37326.9,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 69.61
       }
     },
     {
@@ -570,7 +569,7 @@
         "price": 22022.8,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 98.0
+        "it_workforce": 73.19
       }
     },
     {
@@ -586,7 +585,7 @@
         "price": 24912.0,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 24.87
       }
     },
     {
@@ -602,7 +601,7 @@
         "price": 14111.4,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 43.89
       }
     },
     {
@@ -618,7 +617,7 @@
         "price": 5734.1,
         "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 32.5
       }
     },
     {
@@ -634,7 +633,7 @@
         "price": 7622.1,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 30.35
       }
     },
     {
@@ -650,7 +649,7 @@
         "price": 3295.1,
         "renewable_access": 79.14,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 23.53
       }
     },
     {
@@ -666,7 +665,7 @@
         "price": 10024.7,
         "renewable_access": 81.52,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.22
       }
     },
     {
@@ -682,7 +681,7 @@
         "price": 41555.8,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 73.28
       }
     },
     {
@@ -698,7 +697,7 @@
         "price": 6613.1,
         "renewable_access": 92.56,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.22
       }
     },
     {
@@ -714,7 +713,7 @@
         "price": 97069.0,
         "renewable_access": 36.36,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 60.0
       }
     },
     {
@@ -730,7 +729,7 @@
         "price": 9358.9,
         "renewable_access": 76.73,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 43.76
       }
     },
     {
@@ -746,7 +745,7 @@
         "price": 3767.6,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 26.03
       }
     },
     {
@@ -762,7 +761,7 @@
         "price": 4139.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 32.5
       }
     },
     {
@@ -778,7 +777,7 @@
         "price": 8161.4,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 34.02
       }
     },
     {
@@ -794,7 +793,7 @@
         "price": 199523.8,
         "renewable_access": 48.32,
         "regional_vitality": 5.0,
-        "it_workforce": 98.0
+        "it_workforce": 100.0
       }
     },
     {
@@ -810,7 +809,7 @@
         "price": 3842.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 23.53
       }
     },
     {
@@ -826,7 +825,7 @@
         "price": 42510.6,
         "renewable_access": 40.67,
         "regional_vitality": 15.0,
-        "it_workforce": 81.0
+        "it_workforce": 81.16
       }
     },
     {
@@ -842,7 +841,7 @@
         "price": 7531.0,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 29.25
       }
     },
     {
@@ -858,7 +857,7 @@
         "price": 29086.6,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 26.03
       }
     },
     {
@@ -874,7 +873,7 @@
         "price": 140909.2,
         "renewable_access": 63.18,
         "regional_vitality": 15.0,
-        "it_workforce": 81.0
+        "it_workforce": 63.55
       }
     },
     {
@@ -890,7 +889,7 @@
         "price": 2497.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 20.11
       }
     },
     {
@@ -906,7 +905,7 @@
         "price": 13596.6,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 47.27
       }
     },
     {
@@ -922,7 +921,7 @@
         "price": 39602.3,
         "renewable_access": 73.29,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 50.39
       }
     },
     {
@@ -938,7 +937,7 @@
         "price": 3356.6,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 14.66
       }
     },
     {
@@ -954,7 +953,7 @@
         "price": 19621.5,
         "renewable_access": 85.05,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 50.27
       }
     },
     {
@@ -970,7 +969,7 @@
         "price": 10285.6,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 55.25
       }
     },
     {
@@ -986,7 +985,7 @@
         "price": 27183.6,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 32.77
       }
     },
     {
@@ -1002,7 +1001,7 @@
         "price": 125396.4,
         "renewable_access": 37.04,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 70.64
       }
     },
     {
@@ -1018,7 +1017,7 @@
         "price": 24444.8,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 40.84
       }
     },
     {
@@ -1034,7 +1033,7 @@
         "price": 31102.9,
         "renewable_access": 73.85,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 39.64
       }
     },
     {
@@ -1050,7 +1049,7 @@
         "price": 11122.2,
         "renewable_access": 48.45,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 34.48
       }
     },
     {
@@ -1066,7 +1065,7 @@
         "price": 10755.0,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 42.4
       }
     },
     {
@@ -1082,7 +1081,7 @@
         "price": 28325.9,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 33.54
       }
     },
     {
@@ -1098,7 +1097,7 @@
         "price": 4414.0,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.87
       }
     },
     {
@@ -1114,7 +1113,7 @@
         "price": 3625.2,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 28.85
       }
     },
     {
@@ -1130,7 +1129,7 @@
         "price": 9118.3,
         "renewable_access": 91.7,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 34.91
       }
     },
     {
@@ -1146,7 +1145,7 @@
         "price": 5341.8,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 30.69
       }
     },
     {
@@ -1162,7 +1161,7 @@
         "price": 66998.1,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 44.62
       }
     },
     {
@@ -1178,7 +1177,7 @@
         "price": 6476.0,
         "renewable_access": 87.08,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.87
       }
     },
     {
@@ -1194,7 +1193,7 @@
         "price": 8830.5,
         "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 45.55
       }
     },
     {
@@ -1210,7 +1209,7 @@
         "price": 106593.9,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 67.01
       }
     },
     {
@@ -1226,7 +1225,7 @@
         "price": 30364.3,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 60.46
       }
     },
     {
@@ -1242,7 +1241,7 @@
         "price": 17498.8,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 48.69
       }
     },
     {
@@ -1258,7 +1257,7 @@
         "price": 13655.4,
         "renewable_access": 85.98,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 43.42
       }
     },
     {
@@ -1274,7 +1273,7 @@
         "price": 3129.1,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 21.09
       }
     },
     {
@@ -1290,7 +1289,7 @@
         "price": 44047.3,
         "renewable_access": 39.39,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 50.63
       }
     },
     {
@@ -1306,7 +1305,7 @@
         "price": 47204.8,
         "renewable_access": 45.26,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 46.37
       }
     },
     {
@@ -1322,7 +1321,7 @@
         "price": 30778.6,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 52.38
       }
     },
     {
@@ -1338,7 +1337,7 @@
         "price": 6727.8,
         "renewable_access": 100.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 48.94
       }
     },
     {
@@ -1354,7 +1353,7 @@
         "price": 14449.0,
         "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "it_workforce": 92.0
+        "it_workforce": 69.72
       }
     },
     {
@@ -1370,7 +1369,7 @@
         "price": 2555.5,
         "renewable_access": 35.65,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 21.98
       }
     },
     {
@@ -1386,7 +1385,7 @@
         "price": 10156.4,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 37.33
       }
     },
     {
@@ -1402,7 +1401,7 @@
         "price": 28315.9,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 59.73
       }
     },
     {
@@ -1418,7 +1417,7 @@
         "price": 5212.3,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 50.0
+        "it_workforce": 35.33
       }
     },
     {
@@ -1434,7 +1433,7 @@
         "price": 7199.3,
         "renewable_access": 78.11,
         "regional_vitality": 100.0,
-        "it_workforce": 75.0
+        "it_workforce": 34.7
       }
     },
     {
@@ -1450,7 +1449,7 @@
         "price": 9516.2,
         "renewable_access": 72.39,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 17.77
       }
     },
     {
@@ -1466,7 +1465,7 @@
         "price": 2413.1,
         "renewable_access": 91.36,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 12.59
       }
     },
     {
@@ -1482,7 +1481,7 @@
         "price": 9205.6,
         "renewable_access": 87.35,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 48.08
       }
     },
     {
@@ -1498,7 +1497,7 @@
         "price": 24502.5,
         "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 29.25
       }
     },
     {
@@ -1514,7 +1513,7 @@
         "price": 6100.9,
         "renewable_access": 75.27,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 22.79
       }
     },
     {
@@ -1530,7 +1529,7 @@
         "price": 13956.6,
         "renewable_access": 80.75,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 68.87
       }
     },
     {
@@ -1546,7 +1545,7 @@
         "price": 24208.3,
         "renewable_access": 88.64,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 57.42
       }
     },
     {
@@ -1562,7 +1561,7 @@
         "price": 6611.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 22.79
       }
     },
     {
@@ -1578,7 +1577,7 @@
         "price": 5633.9,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.87
       }
     },
     {
@@ -1594,7 +1593,7 @@
         "price": 13797.3,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 59.52
       }
     },
     {
@@ -1610,7 +1609,7 @@
         "price": 8717.7,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 61.0
       }
     },
     {
@@ -1626,7 +1625,7 @@
         "price": 8951.0,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 40.38
       }
     },
     {
@@ -1642,7 +1641,7 @@
         "price": 18133.6,
         "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 35.12
       }
     },
     {
@@ -1658,7 +1657,7 @@
         "price": 6496.4,
         "renewable_access": 74.29,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 31.33
       }
     },
     {
@@ -1674,7 +1673,7 @@
         "price": 35283.0,
         "renewable_access": 83.42,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 53.0
       }
     },
     {
@@ -1690,7 +1689,7 @@
         "price": 24393.8,
         "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "it_workforce": 50.0
+        "it_workforce": 38.7
       }
     },
     {
@@ -1706,7 +1705,7 @@
         "price": 11684.4,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 51.99
       }
     },
     {
@@ -1722,7 +1721,7 @@
         "price": 45217.9,
         "renewable_access": 44.09,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 54.34
       }
     },
     {
@@ -1738,7 +1737,7 @@
         "price": 7609.8,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 26.03
       }
     },
     {
@@ -1754,7 +1753,7 @@
         "price": 7617.8,
         "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "it_workforce": 30.0
+        "it_workforce": 35.33
       }
     },
     {
@@ -1770,7 +1769,7 @@
         "price": 5884.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 43.34
       }
     },
     {
@@ -1786,7 +1785,7 @@
         "price": 22948.5,
         "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "it_workforce": 75.0
+        "it_workforce": 64.33
       }
     },
     {
@@ -1802,7 +1801,7 @@
         "price": 8033.2,
         "renewable_access": 85.6,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 37.65
       }
     },
     {
@@ -1818,7 +1817,7 @@
         "price": 5156.8,
         "renewable_access": 79.56,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 24.22
       }
     },
     {
@@ -1834,7 +1833,7 @@
         "price": 6909.7,
         "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "it_workforce": 30.0
+        "it_workforce": 23.53
       }
     }
   ]

@@ -318,6 +318,73 @@ def renewable_raw_count(name: str) -> int:
 
 
 # ============================================================
+# 5) IT 인력 — SW회사 raw + 기업규모별 표준 종사자 추정
+# ============================================================
+
+# 한국 IT 산업 평균 종사자 수 (통계청 전국사업체조사 평균 기준 추정)
+# - 대기업: 1000명+ (네이버·카카오·삼성SDS 등 IT 대기업 평균)
+# - 중견기업: 100~300명
+# - 중소기업: 10~30명 (대부분 스타트업/소형)
+WORKFORCE_PER_FIRM = {
+    "대기업": 1500.0,
+    "중견기업": 250.0,
+    "중소기업": 18.0,
+}
+
+
+@lru_cache(maxsize=1)
+def _workforce_features() -> dict[str, float]:
+    """시군별 IT 추정 종사자 수.
+
+    산업집적도(`industry_cluster`)는 단순 카운트 가중치(대=3, 중견=2, 중소=1)인 반면,
+    이 지표는 실제 종사자 추정(대=1500, 중견=250, 중소=18)으로 대기업 비중이 큰
+    시군이 훨씬 더 강조됨 — 산업집적도와 다른 시그널.
+    """
+    feats = _industry_features()
+    out: dict[str, float] = {}
+    df = pd.read_csv(SW_CSV, encoding="cp949", low_memory=False)
+    addr = df["주소"].fillna(df["입력주소"]).astype(str)
+    parsed = addr.str.extract(_ADDR_RE)
+    parsed.columns = ["province", "city"]
+
+    def to_region(prov: str, city: str) -> str | None:
+        if pd.isna(prov) or pd.isna(city):
+            return None
+        if prov in PROVINCE_TO_METRO:
+            return prov
+        if city.endswith("구"):
+            return None
+        return city
+
+    df["region"] = [to_region(p, c) for p, c in zip(parsed["province"], parsed["city"])]
+    df = df.dropna(subset=["region"])
+    for region, sub in df.groupby("region"):
+        est = float(sub["기업규모"].map(WORKFORCE_PER_FIRM).fillna(WORKFORCE_PER_FIRM["중소기업"]).sum())
+        out[region] = est
+    # silence unused warning for feats
+    _ = feats
+    return out
+
+
+def it_workforce_real(name: str) -> float:
+    """IT 인력 실데이터 파생점수 (0~100). SW회사 raw × 규모별 표준 종사자."""
+    feats = _workforce_features()
+    val = feats.get(name, 0.0)
+    vals = list(feats.values())
+    import math as _m
+    # log-scale (서울/판교 압도 완화)
+    log_vals = [_m.log1p(v) for v in vals]
+    log_val = _m.log1p(val)
+    lo, hi = min(log_vals), max(log_vals)
+    return float((log_val - lo) / max(hi - lo, 1e-9) * 100)
+
+
+def it_workforce_estimate(name: str) -> int:
+    """추정 IT 종사자 수 (UI 표시용)."""
+    return int(_workforce_features().get(name, 0))
+
+
+# ============================================================
 # 디버그 / 검증
 # ============================================================
 
