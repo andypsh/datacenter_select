@@ -46,3 +46,15 @@ __pycache__/
 # QGIS 임시
 *.qgz~
 *.qgs~
+
+# ===== frontend (Vue/Vite) =====
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/*.log
+
+# Python venv / 빌드 산출물
+.venv/
+venv/
+*.egg-info/
