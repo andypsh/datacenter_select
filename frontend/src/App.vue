@@ -54,9 +54,11 @@ onMounted(() => {
       </aside>
 
       <section class="flex-1 relative overflow-hidden">
-        <MapView v-show="tab === 'map'" />
-        <Dashboard v-show="tab === 'dashboard'" />
-        <CompareView v-show="tab === 'compare'" />
+        <KeepAlive>
+          <MapView v-if="tab === 'map'" key="map" />
+        </KeepAlive>
+        <Dashboard v-if="tab === 'dashboard'" />
+        <CompareView v-if="tab === 'compare'" />
       </section>
     </main>
   </div>
