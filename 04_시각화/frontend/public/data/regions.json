@@ -1,41 +1,90 @@
 {
-  "version": 1,
-  "source": "_v1_data/06_실거래가/가중치데이터_최종.csv",
+  "version": 2,
+  "source": [
+    "_v1_data/06_실거래가/가중치데이터_최종.csv (5개 V1 지표)",
+    "extra_data.py (5개 신규/proxy 지표)"
+  ],
   "factors": [
+    {
+      "key": "power_stability",
+      "label": "전력 안정성",
+      "unit": "점",
+      "direction": "higher_is_better",
+      "default_weight": 18,
+      "desc": "변전소·송전망 인프라 (KEPCO+KPX, V2 proxy)",
+      "category": "전력"
+    },
+    {
+      "key": "disaster_risk",
+      "label": "자연재해 위험",
+      "unit": "z",
+      "direction": "lower_is_better",
+      "default_weight": 10,
+      "desc": "지진·태풍 위험도 평균 (낮을수록 안전)",
+      "category": "안전"
+    },
     {
       "key": "temp",
       "label": "평균기온",
       "unit": "°C",
       "direction": "lower_is_better",
-      "desc": "낮을수록 냉각 비용 ↓"
-    },
-    {
-      "key": "earthquake",
-      "label": "지진위험도",
-      "unit": "z",
-      "direction": "lower_is_better",
-      "desc": "낮을수록 안전"
-    },
-    {
-      "key": "typhoon",
-      "label": "태풍위험도",
-      "unit": "z",
-      "direction": "lower_is_better",
-      "desc": "낮을수록 안전"
-    },
-    {
-      "key": "companies",
-      "label": "SW 기업 갯수",
-      "unit": "개",
-      "direction": "higher_is_better",
-      "desc": "많을수록 산업 클러스터 효과 ↑"
+      "default_weight": 8,
+      "desc": "낮을수록 냉각 비용 ↓",
+      "category": "환경"
     },
     {
       "key": "price",
-      "label": "실거래가",
+      "label": "토지 비용",
       "unit": "만원",
       "direction": "lower_is_better",
-      "desc": "낮을수록 부지 확보 비용 ↓"
+      "default_weight": 10,
+      "desc": "실거래가 평균 (낮을수록 부지 확보 비용 ↓)",
+      "category": "비용"
+    },
+    {
+      "key": "companies",
+      "label": "산업 집적도",
+      "unit": "개",
+      "direction": "higher_is_better",
+      "default_weight": 10,
+      "desc": "SW·AI 기업 분포 (V1; 추후 KICOX 산단 추가)",
+      "category": "산업"
+    },
+    {
+      "key": "telecom_infra",
+      "label": "통신 인프라",
+      "unit": "점",
+      "direction": "higher_is_better",
+      "default_weight": 9,
+      "desc": "광케이블·백본망 보급 (V2 proxy)",
+      "category": "통신"
+    },
+    {
+      "key": "it_workforce",
+      "label": "IT 인력",
+      "unit": "점",
+      "direction": "higher_is_better",
+      "default_weight": 8,
+      "desc": "IT·공학 종사자 공급 (V2 proxy)",
+      "category": "인력"
+    },
+    {
+      "key": "regional_vitality",
+      "label": "지역활력",
+      "unit": "점",
+      "direction": "higher_is_better",
+      "default_weight": 18,
+      "desc": "★14회 주제 직격 — 행안부 인구감소지역 지정",
+      "category": "지역활력"
+    },
+    {
+      "key": "renewable_access",
+      "label": "재생에너지",
+      "unit": "점",
+      "direction": "higher_is_better",
+      "default_weight": 9,
+      "desc": "신재생 자원 접근성 / RE100 대응 (V2 proxy)",
+      "category": "ESG"
     }
   ],
   "regions": [
@@ -44,11 +93,15 @@
       "lat": 37.831,
       "lng": 127.51,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1536,
         "temp": 10.923,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 15387.6,
         "companies": 24,
-        "price": 15387.6
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -56,11 +109,15 @@
       "lat": 35.825,
       "lng": 128.741,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.3836,
         "temp": 13.855,
-        "earthquake": -0.225,
-        "typhoon": 0.9922,
+        "price": 16654.9,
         "companies": 192,
-        "price": 16654.9
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -68,11 +125,15 @@
       "lat": 35.856,
       "lng": 129.224,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.727,
         "temp": 12.904,
-        "earthquake": 0.922,
-        "typhoon": 0.5321,
+        "price": 14113.9,
         "companies": 98,
-        "price": 14113.9
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -80,11 +141,15 @@
       "lat": 36.274,
       "lng": 127.249,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 10.217,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 14780.9,
         "companies": 19,
-        "price": 14780.9
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -92,11 +157,15 @@
       "lat": 35.726,
       "lng": 128.263,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.6052,
         "temp": 12.822,
-        "earthquake": 0.2182,
-        "typhoon": 0.9922,
+        "price": 17664.0,
         "companies": 17,
-        "price": 17664.0
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -104,11 +173,15 @@
       "lat": 34.973,
       "lng": 128.323,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1428,
         "temp": 13.49,
-        "earthquake": 0.1331,
-        "typhoon": -0.4187,
+        "price": 5616.9,
         "companies": 12,
-        "price": 5616.9
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -116,11 +189,15 @@
       "lat": 37.658,
       "lng": 126.832,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.0765,
         "temp": 12.172,
-        "earthquake": -0.225,
-        "typhoon": 0.0721,
+        "price": 44293.1,
         "companies": 669,
-        "price": 44293.1
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -128,11 +205,15 @@
       "lat": 35.434,
       "lng": 126.702,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1536,
         "temp": 13.255,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 2687.1,
         "companies": 15,
-        "price": 2687.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -140,11 +221,15 @@
       "lat": 36.447,
       "lng": 127.119,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.4192,
         "temp": 12.279,
-        "earthquake": 0.3063,
-        "typhoon": 0.5321,
+        "price": 11929.3,
         "companies": 76,
-        "price": 11929.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -152,11 +237,15 @@
       "lat": 37.429,
       "lng": 127.007,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 11.101,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 84954.5,
         "companies": 59,
-        "price": 84954.5
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -164,11 +253,15 @@
       "lat": 37.479,
       "lng": 126.864,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 13.775,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 234588.0,
         "companies": 219,
-        "price": 234588.0
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -176,11 +269,15 @@
       "lat": 34.94,
       "lng": 127.696,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.0913,
         "temp": 13.34,
-        "earthquake": 0.236,
-        "typhoon": -0.4187,
+        "price": 12902.4,
         "companies": 78,
-        "price": 12902.4
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -188,11 +285,15 @@
       "lat": 35.16,
       "lng": 126.851,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": 0.4274,
         "temp": 13.175,
-        "earthquake": 0.3226,
-        "typhoon": 0.5321,
+        "price": 40021.2,
         "companies": 912,
-        "price": 40021.2
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 25.0
       }
     },
     {
@@ -200,11 +301,15 @@
       "lat": 37.429,
       "lng": 127.255,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.1343,
         "temp": 11.68,
-        "earthquake": 0.1502,
-        "typhoon": -0.4187,
+        "price": 28319.6,
         "companies": 99,
-        "price": 28319.6
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -212,11 +317,15 @@
       "lat": 36.815,
       "lng": 127.787,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 11.085,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 5813.1,
         "companies": 20,
-        "price": 5813.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -224,11 +333,15 @@
       "lat": 37.594,
       "lng": 127.13,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 12.91,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 211554.7,
         "companies": 61,
-        "price": 211554.7
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -236,11 +349,15 @@
       "lat": 36.119,
       "lng": 128.344,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.1169,
         "temp": 13.09,
-        "earthquake": 0.185,
-        "typhoon": -0.4187,
+        "price": 19356.7,
         "companies": 194,
-        "price": 19356.7
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -248,11 +365,15 @@
       "lat": 36.243,
       "lng": 128.572,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0917,
         "temp": 11.973,
-        "earthquake": 0.2353,
-        "typhoon": -0.4187,
+        "price": 7220.0,
         "companies": 13,
-        "price": 7220.0
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -260,11 +381,15 @@
       "lat": 37.361,
       "lng": 126.935,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 13.578,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 34900.4,
         "companies": 217,
-        "price": 34900.4
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -272,11 +397,15 @@
       "lat": 36.108,
       "lng": 127.488,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0569,
         "temp": 12.13,
-        "earthquake": 0.3048,
-        "typhoon": -0.4187,
+        "price": 6402.8,
         "companies": 24,
-        "price": 6402.8
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -284,11 +413,15 @@
       "lat": 35.803,
       "lng": 126.88,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.1428,
         "temp": 13.0,
-        "earthquake": 0.1331,
-        "typhoon": -0.4187,
+        "price": 6514.8,
         "companies": 37,
-        "price": 6514.8
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -296,11 +429,15 @@
       "lat": 36.14,
       "lng": 128.114,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.413,
         "temp": 12.177,
-        "earthquake": 0.2938,
-        "typhoon": 0.5321,
+        "price": 8133.6,
         "companies": 63,
-        "price": 8133.6
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -308,11 +445,15 @@
       "lat": 37.615,
       "lng": 126.715,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 12.675,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 30637.7,
         "companies": 170,
-        "price": 30637.7
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -320,11 +461,15 @@
       "lat": 35.228,
       "lng": 128.889,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.3219,
         "temp": 13.78,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 37801.8,
         "companies": 178,
-        "price": 37801.8
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -332,11 +477,15 @@
       "lat": 35.016,
       "lng": 126.711,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 13.235,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 7486.1,
         "companies": 221,
-        "price": 7486.1
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -344,11 +493,15 @@
       "lat": 37.636,
       "lng": 127.216,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.0765,
         "temp": 12.3,
-        "earthquake": -0.225,
-        "typhoon": 0.0721,
+        "price": 51330.3,
         "companies": 259,
-        "price": 51330.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -356,11 +509,15 @@
       "lat": 36.187,
       "lng": 127.099,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.103,
         "temp": 12.734,
-        "earthquake": 0.1339,
-        "typhoon": 0.0721,
+        "price": 6586.4,
         "companies": 39,
-        "price": 6586.4
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -368,11 +525,15 @@
       "lat": 35.321,
       "lng": 126.988,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 13.471,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 11036.5,
         "companies": 44,
-        "price": 11036.5
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -380,11 +541,15 @@
       "lat": 35.871,
       "lng": 128.601,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": -0.0902,
         "temp": 14.41,
-        "earthquake": 0.2383,
-        "typhoon": -0.4187,
+        "price": 37326.9,
         "companies": 1345,
-        "price": 37326.9
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 20.0
       }
     },
     {
@@ -392,11 +557,15 @@
       "lat": 36.35,
       "lng": 127.385,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": -0.108,
         "temp": 12.67,
-        "earthquake": 0.2027,
-        "typhoon": -0.4187,
+        "price": 22022.8,
         "companies": 1925,
-        "price": 22022.8
+        "telecom_infra": 95.0,
+        "it_workforce": 98.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 22.0
       }
     },
     {
@@ -404,11 +573,15 @@
       "lat": 37.903,
       "lng": 127.06,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 11.156,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 24912.0,
         "companies": 15,
-        "price": 24912.0
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -416,11 +589,15 @@
       "lat": 34.812,
       "lng": 126.392,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 13.809,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 14111.4,
         "companies": 123,
-        "price": 14111.4
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -428,11 +605,15 @@
       "lat": 34.989,
       "lng": 126.482,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 13.809,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 5734.1,
         "companies": 36,
-        "price": 5734.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -440,11 +621,15 @@
       "lat": 35.504,
       "lng": 128.747,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.4536,
         "temp": 13.2,
-        "earthquake": 0.3752,
-        "typhoon": 0.5321,
+        "price": 7622.1,
         "companies": 27,
-        "price": 7622.1
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -452,11 +637,15 @@
       "lat": 34.771,
       "lng": 127.08,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0399,
         "temp": 13.444,
-        "earthquake": 0.3389,
-        "typhoon": -0.4187,
+        "price": 3295.1,
         "companies": 15,
-        "price": 3295.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -464,11 +653,15 @@
       "lat": 36.49,
       "lng": 127.73,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1087,
         "temp": 10.65,
-        "earthquake": 0.2012,
-        "typhoon": -0.4187,
+        "price": 10024.7,
         "companies": 15,
-        "price": 10024.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -476,11 +669,15 @@
       "lat": 35.18,
       "lng": 129.075,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": 0.4144,
         "temp": 14.65,
-        "earthquake": -0.225,
-        "typhoon": 1.0537,
+        "price": 41555.8,
         "companies": 1882,
-        "price": 41555.8
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 22.0
       }
     },
     {
@@ -488,11 +685,15 @@
       "lat": 35.732,
       "lng": 126.733,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3326,
         "temp": 13.27,
-        "earthquake": 0.1331,
-        "typhoon": 0.5321,
+        "price": 6613.1,
         "companies": 17,
-        "price": 6613.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -500,11 +701,15 @@
       "lat": 37.503,
       "lng": 126.766,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 13.275,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 97069.0,
         "companies": 494,
-        "price": 97069.0
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -512,11 +717,15 @@
       "lat": 35.003,
       "lng": 128.064,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.5712,
         "temp": 14.415,
-        "earthquake": 0.1502,
-        "typhoon": 0.9922,
+        "price": 9358.9,
         "companies": 32,
-        "price": 9358.9
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -524,11 +733,15 @@
       "lat": 35.416,
       "lng": 127.873,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0917,
         "temp": 12.258,
-        "earthquake": 0.2353,
-        "typhoon": -0.4187,
+        "price": 3767.6,
         "companies": 17,
-        "price": 3767.6
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -536,11 +749,15 @@
       "lat": 36.411,
       "lng": 128.159,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.7364,
         "temp": 11.843,
-        "earthquake": 0.45,
-        "typhoon": 1.0229,
+        "price": 4139.7,
         "companies": 36,
-        "price": 4139.7
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -548,11 +765,15 @@
       "lat": 36.785,
       "lng": 126.45,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.5715,
         "temp": 10.999,
-        "earthquake": 0.1509,
-        "typhoon": 0.9922,
+        "price": 8161.4,
         "companies": 41,
-        "price": 8161.4
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -560,11 +781,15 @@
       "lat": 37.566,
       "lng": 126.978,
       "factors": {
+        "power_stability": 83.0,
+        "disaster_risk": 0.1536,
         "temp": 13.144,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 199523.8,
         "companies": 16565,
-        "price": 199523.8
+        "telecom_infra": 95.0,
+        "it_workforce": 98.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 8.0
       }
     },
     {
@@ -572,11 +797,15 @@
       "lat": 36.08,
       "lng": 126.692,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 12.775,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 3842.7,
         "companies": 13,
-        "price": 3842.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -584,11 +813,15 @@
       "lat": 37.42,
       "lng": 127.127,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 13.03,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 42510.6,
         "companies": 1605,
-        "price": 42510.6
+        "telecom_infra": 82.0,
+        "it_workforce": 81.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -596,11 +829,15 @@
       "lat": 35.919,
       "lng": 128.283,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1509,
         "temp": 13.02,
-        "earthquake": 0.1169,
-        "typhoon": -0.4187,
+        "price": 7531.0,
         "companies": 26,
-        "price": 7531.0
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -608,11 +845,15 @@
       "lat": 36.48,
       "lng": 127.289,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": 0.1536,
         "temp": 12.368,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 29086.6,
         "companies": 333,
-        "price": 29086.6
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 38.0
       }
     },
     {
@@ -620,11 +861,15 @@
       "lat": 37.263,
       "lng": 127.029,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": 0.3412,
         "temp": 11.556,
-        "earthquake": 0.1502,
-        "typhoon": 0.5321,
+        "price": 140909.2,
         "companies": 621,
-        "price": 140909.2
+        "telecom_infra": 82.0,
+        "it_workforce": 81.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -632,11 +877,15 @@
       "lat": 35.374,
       "lng": 127.137,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1428,
         "temp": 12.01,
-        "earthquake": 0.1331,
-        "typhoon": -0.4187,
+        "price": 2497.7,
         "companies": 9,
-        "price": 2497.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -644,11 +893,15 @@
       "lat": 34.951,
       "lng": 127.487,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.2882,
         "temp": 13.985,
-        "earthquake": -0.225,
-        "typhoon": 0.8013,
+        "price": 13596.6,
         "companies": 172,
-        "price": 13596.6
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -656,11 +909,15 @@
       "lat": 37.38,
       "lng": 126.803,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.0765,
         "temp": 12.56,
-        "earthquake": -0.225,
-        "typhoon": 0.0721,
+        "price": 39602.3,
         "companies": 154,
-        "price": 39602.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -668,11 +925,15 @@
       "lat": 34.834,
       "lng": 126.351,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1689,
         "temp": 14.178,
-        "earthquake": -0.225,
-        "typhoon": 0.5629,
+        "price": 3356.6,
         "companies": 5,
-        "price": 3356.6
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -680,11 +941,15 @@
       "lat": 36.789,
       "lng": 127.001,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.3219,
         "temp": 12.708,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 19621.5,
         "companies": 150,
-        "price": 19621.5
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -692,11 +957,15 @@
       "lat": 37.322,
       "lng": 126.831,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 11.866,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 10285.6,
         "companies": 301,
-        "price": 10285.6
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -704,11 +973,15 @@
       "lat": 37.008,
       "lng": 127.28,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.1536,
         "temp": 12.596,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 27183.6,
         "companies": 37,
-        "price": 27183.6
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -716,11 +989,15 @@
       "lat": 37.394,
       "lng": 126.957,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 13.17,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 125396.4,
         "companies": 967,
-        "price": 125396.4
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -728,11 +1005,15 @@
       "lat": 35.335,
       "lng": 129.037,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.4759,
         "temp": 14.15,
-        "earthquake": -0.225,
-        "typhoon": 1.1768,
+        "price": 24444.8,
         "companies": 83,
-        "price": 24444.8
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -740,11 +1021,15 @@
       "lat": 37.785,
       "lng": 127.046,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 11.156,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 31102.9,
         "companies": 76,
-        "price": 31102.9
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -752,11 +1037,15 @@
       "lat": 37.491,
       "lng": 127.487,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1536,
         "temp": 10.492,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 11122.2,
         "companies": 42,
-        "price": 11122.2
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -764,11 +1053,15 @@
       "lat": 34.76,
       "lng": 127.662,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.5627,
         "temp": 15.078,
-        "earthquake": 0.1331,
-        "typhoon": 0.9922,
+        "price": 10755.0,
         "companies": 102,
-        "price": 10755.0
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -776,11 +1069,15 @@
       "lat": 37.298,
       "lng": 127.637,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": 0.3569,
         "temp": 11.655,
-        "earthquake": 0.1509,
-        "typhoon": 0.5629,
+        "price": 28325.9,
         "companies": 40,
-        "price": 28325.9
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -788,11 +1085,15 @@
       "lat": 36.175,
       "lng": 127.776,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3585,
         "temp": 12.13,
-        "earthquake": 0.185,
-        "typhoon": 0.5321,
+        "price": 4414.0,
         "companies": 15,
-        "price": 4414.0
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -800,11 +1101,15 @@
       "lat": 34.8,
       "lng": 126.697,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3497,
         "temp": 13.687,
-        "earthquake": 0.1672,
-        "typhoon": 0.5321,
+        "price": 3625.2,
         "companies": 23,
-        "price": 3625.2
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -812,11 +1117,15 @@
       "lat": 35.973,
       "lng": 128.939,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.1087,
         "temp": 12.675,
-        "earthquake": 0.2012,
-        "typhoon": -0.4187,
+        "price": 9118.3,
         "companies": 46,
-        "price": 9118.3
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -824,11 +1133,15 @@
       "lat": 36.681,
       "lng": 126.844,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 12.76,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 5341.8,
         "companies": 33,
-        "price": 5341.8
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -836,11 +1149,15 @@
       "lat": 37.15,
       "lng": 127.077,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 12.35,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 66998.1,
         "companies": 45,
-        "price": 66998.1
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -848,11 +1165,15 @@
       "lat": 36.306,
       "lng": 127.572,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3133,
         "temp": 12.05,
-        "earthquake": 0.2545,
-        "typhoon": 0.3721,
+        "price": 6476.0,
         "companies": 16,
-        "price": 6476.0
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -860,11 +1181,15 @@
       "lat": 35.905,
       "lng": 127.162,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0821,
         "temp": 12.88,
-        "earthquake": 0.2545,
-        "typhoon": -0.4187,
+        "price": 8830.5,
         "companies": 56,
-        "price": 8830.5
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -872,11 +1197,15 @@
       "lat": 37.241,
       "lng": 127.178,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.0765,
         "temp": 11.78,
-        "earthquake": -0.225,
-        "typhoon": 0.0721,
+        "price": 106593.9,
         "companies": 526,
-        "price": 106593.9
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -884,11 +1213,15 @@
       "lat": 35.539,
       "lng": 129.311,
       "factors": {
+        "power_stability": 88.0,
+        "disaster_risk": -0.3219,
         "temp": 14.334,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 30364.3,
         "companies": 432,
-        "price": 30364.3
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 25.0
       }
     },
     {
@@ -896,11 +1229,15 @@
       "lat": 37.342,
       "lng": 127.92,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.3219,
         "temp": 10.842,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 17498.8,
         "companies": 200,
-        "price": 17498.8
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 75.0
       }
     },
     {
@@ -908,11 +1245,15 @@
       "lat": 36.94,
       "lng": 127.69,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 11.475,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 13655.4,
         "companies": 30,
-        "price": 13655.4
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -920,11 +1261,15 @@
       "lat": 35.322,
       "lng": 128.262,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1002,
         "temp": 13.01,
-        "earthquake": 0.2182,
-        "typhoon": -0.4187,
+        "price": 3129.1,
         "companies": 10,
-        "price": 3129.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -932,11 +1277,15 @@
       "lat": 37.345,
       "lng": 126.968,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 11.556,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 44047.3,
         "companies": 156,
-        "price": 44047.3
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -944,11 +1293,15 @@
       "lat": 37.737,
       "lng": 127.034,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 11.83,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 47204.8,
         "companies": 141,
-        "price": 47204.8
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -956,11 +1309,15 @@
       "lat": 37.272,
       "lng": 127.435,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.1343,
         "temp": 12.313,
-        "earthquake": 0.1502,
-        "typhoon": -0.4187,
+        "price": 30778.6,
         "companies": 42,
-        "price": 30778.6
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -968,11 +1325,15 @@
       "lat": 35.948,
       "lng": 126.957,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.4862,
         "temp": 12.903,
-        "earthquake": 0.4402,
-        "typhoon": 0.5321,
+        "price": 6727.8,
         "companies": 119,
-        "price": 6727.8
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -980,11 +1341,15 @@
       "lat": 37.456,
       "lng": 126.706,
       "factors": {
+        "power_stability": 83.0,
+        "disaster_risk": -0.0488,
         "temp": 12.157,
-        "earthquake": 0.3211,
-        "typhoon": -0.4187,
+        "price": 14449.0,
         "companies": 1272,
-        "price": 14449.0
+        "telecom_infra": 95.0,
+        "it_workforce": 92.0,
+        "regional_vitality": 5.0,
+        "renewable_access": 28.0
       }
     },
     {
@@ -992,11 +1357,15 @@
       "lat": 35.617,
       "lng": 127.288,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.0765,
         "temp": 11.77,
-        "earthquake": -0.225,
-        "typhoon": 0.0721,
+        "price": 2555.5,
         "companies": 11,
-        "price": 2555.5
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -1004,11 +1373,15 @@
       "lat": 35.302,
       "lng": 126.788,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 13.03,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 10156.4,
         "companies": 58,
-        "price": 10156.4
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -1016,11 +1389,15 @@
       "lat": 35.824,
       "lng": 127.148,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.1536,
         "temp": 14.183,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 28315.9,
         "companies": 568,
-        "price": 28315.9
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -1028,11 +1405,15 @@
       "lat": 35.57,
       "lng": 126.856,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 12.89,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 5212.3,
         "companies": 51,
-        "price": 5212.3
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -1040,11 +1421,15 @@
       "lat": 37.133,
       "lng": 128.191,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.1165,
         "temp": 10.648,
-        "earthquake": 0.1857,
-        "typhoon": -0.4187,
+        "price": 7199.3,
         "companies": 44,
-        "price": 7199.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -1052,11 +1437,15 @@
       "lat": 36.785,
       "lng": 127.581,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 12.5,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 9516.2,
         "companies": 7,
-        "price": 9516.2
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -1064,11 +1453,15 @@
       "lat": 35.792,
       "lng": 127.425,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1513,
         "temp": 10.975,
-        "earthquake": 0.1161,
-        "typhoon": -0.4187,
+        "price": 2413.1,
         "companies": 4,
-        "price": 2413.1
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 85.0
       }
     },
     {
@@ -1076,11 +1469,15 @@
       "lat": 35.18,
       "lng": 128.108,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.6704,
         "temp": 13.195,
-        "earthquake": 0.2871,
-        "typhoon": 1.0537,
+        "price": 9205.6,
         "companies": 181,
-        "price": 9205.6
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -1088,11 +1485,15 @@
       "lat": 36.855,
       "lng": 127.435,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3836,
         "temp": 12.002,
-        "earthquake": -0.225,
-        "typhoon": 0.9922,
+        "price": 24502.5,
         "companies": 25,
-        "price": 24502.5
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -1100,11 +1501,15 @@
       "lat": 35.544,
       "lng": 128.492,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.6744,
         "temp": 13.597,
-        "earthquake": 0.3566,
-        "typhoon": 0.9922,
+        "price": 6100.9,
         "companies": 12,
-        "price": 6100.9
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -1112,11 +1517,15 @@
       "lat": 35.228,
       "lng": 128.681,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": -0.1165,
         "temp": 14.513,
-        "earthquake": 0.1857,
-        "typhoon": -0.4187,
+        "price": 13956.6,
         "companies": 667,
-        "price": 13956.6
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -1124,11 +1533,15 @@
       "lat": 36.815,
       "lng": 127.114,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.1536,
         "temp": 12.78,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 24208.3,
         "companies": 319,
-        "price": 24208.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -1136,11 +1549,15 @@
       "lat": 35.647,
       "lng": 128.734,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.5967,
         "temp": 12.915,
-        "earthquake": 0.2012,
-        "typhoon": 0.9922,
+        "price": 6611.7,
         "companies": 13,
-        "price": 6611.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -1148,11 +1565,15 @@
       "lat": 36.459,
       "lng": 126.802,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1343,
         "temp": 11.58,
-        "earthquake": 0.1502,
-        "typhoon": -0.4187,
+        "price": 5633.9,
         "companies": 15,
-        "price": 5633.9
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -1160,11 +1581,15 @@
       "lat": 36.642,
       "lng": 127.489,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.4758,
         "temp": 12.302,
-        "earthquake": 0.1502,
-        "typhoon": 0.8013,
+        "price": 13797.3,
         "companies": 546,
-        "price": 13797.3
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -1172,11 +1597,15 @@
       "lat": 37.881,
       "lng": 127.73,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.1536,
         "temp": 11.086,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 8717.7,
         "companies": 316,
-        "price": 8717.7
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 75.0
       }
     },
     {
@@ -1184,11 +1613,15 @@
       "lat": 36.991,
       "lng": 127.926,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.253,
         "temp": 11.247,
-        "earthquake": 0.1339,
-        "typhoon": 0.3721,
+        "price": 8951.0,
         "companies": 83,
-        "price": 8951.0
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 48.0
       }
     },
     {
@@ -1196,11 +1629,15 @@
       "lat": 35.996,
       "lng": 128.401,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.6036,
         "temp": 12.413,
-        "earthquake": 0.1842,
-        "typhoon": 1.0229,
+        "price": 18133.6,
         "companies": 47,
-        "price": 18133.6
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -1208,11 +1645,15 @@
       "lat": 36.745,
       "lng": 126.298,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.1343,
         "temp": 12.687,
-        "earthquake": 0.1502,
-        "typhoon": -0.4187,
+        "price": 6496.4,
         "companies": 33,
-        "price": 6496.4
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -1220,11 +1661,15 @@
       "lat": 36.992,
       "lng": 127.113,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 12.856,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 35283.0,
         "companies": 134,
-        "price": 35283.0
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -1232,11 +1677,15 @@
       "lat": 37.895,
       "lng": 127.2,
       "factors": {
+        "power_stability": 65.0,
+        "disaster_risk": -0.3219,
         "temp": 10.782,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 24393.8,
         "companies": 67,
-        "price": 24393.8
+        "telecom_infra": 65.0,
+        "it_workforce": 50.0,
+        "regional_vitality": 35.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -1244,11 +1693,15 @@
       "lat": 36.019,
       "lng": 129.343,
       "factors": {
+        "power_stability": 78.0,
+        "disaster_risk": 0.1788,
         "temp": 13.329,
-        "earthquake": 0.7762,
-        "typhoon": -0.4187,
+        "price": 11684.4,
         "companies": 207,
-        "price": 11684.4
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 60.0
       }
     },
     {
@@ -1256,11 +1709,15 @@
       "lat": 37.539,
       "lng": 127.215,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 13.4,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 45217.9,
         "companies": 262,
-        "price": 45217.9
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -1268,11 +1725,15 @@
       "lat": 35.272,
       "lng": 128.407,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.6056,
         "temp": 13.46,
-        "earthquake": 0.219,
-        "typhoon": 0.9922,
+        "price": 7609.8,
         "companies": 18,
-        "price": 7609.8
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 55.0
       }
     },
     {
@@ -1280,11 +1741,15 @@
       "lat": 36.601,
       "lng": 126.661,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1536,
         "temp": 12.307,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 7617.8,
         "companies": 50,
-        "price": 7617.8
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 55.0,
+        "renewable_access": 72.0
       }
     },
     {
@@ -1292,11 +1757,15 @@
       "lat": 37.697,
       "lng": 127.888,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.3836,
         "temp": 9.059,
-        "earthquake": -0.225,
-        "typhoon": 0.9922,
+        "price": 5884.7,
         "companies": 28,
-        "price": 5884.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 75.0
       }
     },
     {
@@ -1304,11 +1773,15 @@
       "lat": 37.199,
       "lng": 126.831,
       "factors": {
+        "power_stability": 73.0,
+        "disaster_risk": -0.3219,
         "temp": 12.517,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 22948.5,
         "companies": 355,
-        "price": 22948.5
+        "telecom_infra": 82.0,
+        "it_workforce": 75.0,
+        "regional_vitality": 15.0,
+        "renewable_access": 32.0
       }
     },
     {
@@ -1316,11 +1789,15 @@
       "lat": 35.064,
       "lng": 126.987,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.399,
         "temp": 13.072,
-        "earthquake": -0.225,
-        "typhoon": 1.0229,
+        "price": 8033.2,
         "companies": 61,
-        "price": 8033.2
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 92.0
       }
     },
     {
@@ -1328,11 +1805,15 @@
       "lat": 38.106,
       "lng": 127.708,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": 0.1536,
         "temp": 9.272,
-        "earthquake": -0.225,
-        "typhoon": 0.5321,
+        "price": 5156.8,
         "companies": 14,
-        "price": 5156.8
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 75.0
       }
     },
     {
@@ -1340,11 +1821,15 @@
       "lat": 37.491,
       "lng": 127.985,
       "factors": {
+        "power_stability": 50.0,
+        "disaster_risk": -0.3219,
         "temp": 10.08,
-        "earthquake": -0.225,
-        "typhoon": -0.4187,
+        "price": 6909.7,
         "companies": 14,
-        "price": 6909.7
+        "telecom_infra": 45.0,
+        "it_workforce": 30.0,
+        "regional_vitality": 100.0,
+        "renewable_access": 75.0
       }
     }
   ]

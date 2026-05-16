@@ -2,14 +2,6 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import type { Factor, FactorKey, Region, RegionsPayload, ScoredRegion } from "../types";
 
-const DEFAULT_WEIGHTS: Record<FactorKey, number> = {
-  temp: 20,
-  earthquake: 20,
-  typhoon: 15,
-  companies: 25,
-  price: 20,
-};
-
 function normalizeMinMax(values: number[]): number[] {
   const min = Math.min(...values);
   const max = Math.max(...values);
@@ -20,10 +12,16 @@ function normalizeMinMax(values: number[]): number[] {
 export const useScoringStore = defineStore("scoring", () => {
   const factors = ref<Factor[]>([]);
   const regions = ref<Region[]>([]);
-  const weights = ref<Record<FactorKey, number>>({ ...DEFAULT_WEIGHTS });
+  const weights = ref<Record<FactorKey, number>>({});
   const compareSet = ref<Set<string>>(new Set());
   const loaded = ref(false);
   const error = ref<string | null>(null);
+
+  function defaultWeightsFor(fs: Factor[]): Record<FactorKey, number> {
+    const out: Record<FactorKey, number> = {};
+    for (const f of fs) out[f.key] = f.default_weight;
+    return out;
+  }
 
   async function load(): Promise<void> {
     try {
@@ -32,6 +30,7 @@ export const useScoringStore = defineStore("scoring", () => {
       const payload = (await res.json()) as RegionsPayload;
       factors.value = payload.factors;
       regions.value = payload.regions;
+      weights.value = defaultWeightsFor(payload.factors);
       loaded.value = true;
     } catch (e) {
       error.value = e instanceof Error ? e.message : String(e);
@@ -43,13 +42,7 @@ export const useScoringStore = defineStore("scoring", () => {
   );
 
   const normalized = computed(() => {
-    const out: Record<FactorKey, number[]> = {
-      temp: [],
-      earthquake: [],
-      typhoon: [],
-      companies: [],
-      price: [],
-    };
+    const out: Record<FactorKey, number[]> = {};
     for (const f of factors.value) {
       const raw = regions.value.map((r) => r.factors[f.key]);
       const n = normalizeMinMax(raw);
@@ -85,7 +78,7 @@ export const useScoringStore = defineStore("scoring", () => {
   }
 
   function resetWeights(): void {
-    weights.value = { ...DEFAULT_WEIGHTS };
+    weights.value = defaultWeightsFor(factors.value);
   }
 
   function toggleCompare(name: string): void {

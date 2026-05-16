@@ -1,10 +1,18 @@
-"""V1 CSV → 프론트엔드 JSON 빌드 스크립트.
+"""V1 CSV + 신규 지표 → 프론트엔드 JSON 빌드.
+
+9개 평가지표 (공모전 컨셉 확정안):
+  1. 전력 안정성  (extra_data proxy, higher better)
+  2. 자연재해 안전 (V1 지진+태풍 평균, lower better)
+  3. 기온         (V1, lower better)
+  4. 토지비용     (V1 실거래가, lower better)
+  5. 산업 집적도  (V1 SW기업, higher better)
+  6. 통신 인프라  (extra_data proxy, higher better)
+  7. IT 인력      (extra_data proxy, higher better)
+  8. 지역활력     (인구감소지역, higher better) ★주제 직격
+  9. 재생에너지   (extra_data proxy, higher better)
 
 입력: ../_v1_data/06_실거래가/가중치데이터_최종.csv
 출력: ../04_시각화/frontend/public/data/regions.json
-
-사용:
-    python build_scores.py
 """
 
 from __future__ import annotations
@@ -16,29 +24,83 @@ from pathlib import Path
 import pandas as pd
 
 from coords import COORDS
+from extra_data import (
+    it_workforce,
+    power_stability,
+    regional_vitality,
+    renewable_access,
+    telecom_infra,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC_CSV = ROOT / "_v1_data" / "06_실거래가" / "가중치데이터_최종.csv"
 OUT_JSON = ROOT / "04_시각화" / "frontend" / "public" / "data" / "regions.json"
 
+# Factor 정의 (순서 = UI 표시 순서)
 FACTORS = [
-    {"key": "temp", "label": "평균기온", "unit": "°C", "direction": "lower_is_better",
-     "desc": "낮을수록 냉각 비용 ↓"},
-    {"key": "earthquake", "label": "지진위험도", "unit": "z", "direction": "lower_is_better",
-     "desc": "낮을수록 안전"},
-    {"key": "typhoon", "label": "태풍위험도", "unit": "z", "direction": "lower_is_better",
-     "desc": "낮을수록 안전"},
-    {"key": "companies", "label": "SW 기업 갯수", "unit": "개", "direction": "higher_is_better",
-     "desc": "많을수록 산업 클러스터 효과 ↑"},
-    {"key": "price", "label": "실거래가", "unit": "만원", "direction": "lower_is_better",
-     "desc": "낮을수록 부지 확보 비용 ↓"},
+    {
+        "key": "power_stability", "label": "전력 안정성", "unit": "점",
+        "direction": "higher_is_better", "default_weight": 18,
+        "desc": "변전소·송전망 인프라 (KEPCO+KPX, V2 proxy)",
+        "category": "전력",
+    },
+    {
+        "key": "disaster_risk", "label": "자연재해 위험", "unit": "z",
+        "direction": "lower_is_better", "default_weight": 10,
+        "desc": "지진·태풍 위험도 평균 (낮을수록 안전)",
+        "category": "안전",
+    },
+    {
+        "key": "temp", "label": "평균기온", "unit": "°C",
+        "direction": "lower_is_better", "default_weight": 8,
+        "desc": "낮을수록 냉각 비용 ↓",
+        "category": "환경",
+    },
+    {
+        "key": "price", "label": "토지 비용", "unit": "만원",
+        "direction": "lower_is_better", "default_weight": 10,
+        "desc": "실거래가 평균 (낮을수록 부지 확보 비용 ↓)",
+        "category": "비용",
+    },
+    {
+        "key": "companies", "label": "산업 집적도", "unit": "개",
+        "direction": "higher_is_better", "default_weight": 10,
+        "desc": "SW·AI 기업 분포 (V1; 추후 KICOX 산단 추가)",
+        "category": "산업",
+    },
+    {
+        "key": "telecom_infra", "label": "통신 인프라", "unit": "점",
+        "direction": "higher_is_better", "default_weight": 9,
+        "desc": "광케이블·백본망 보급 (V2 proxy)",
+        "category": "통신",
+    },
+    {
+        "key": "it_workforce", "label": "IT 인력", "unit": "점",
+        "direction": "higher_is_better", "default_weight": 8,
+        "desc": "IT·공학 종사자 공급 (V2 proxy)",
+        "category": "인력",
+    },
+    {
+        "key": "regional_vitality", "label": "지역활력", "unit": "점",
+        "direction": "higher_is_better", "default_weight": 18,
+        "desc": "★14회 주제 직격 — 행안부 인구감소지역 지정",
+        "category": "지역활력",
+    },
+    {
+        "key": "renewable_access", "label": "재생에너지", "unit": "점",
+        "direction": "higher_is_better", "default_weight": 9,
+        "desc": "신재생 자원 접근성 / RE100 대응 (V2 proxy)",
+        "category": "ESG",
+    },
 ]
+# 합계 검증
+assert sum(f["default_weight"] for f in FACTORS) == 100, "default_weight 합 ≠ 100"
 
-COL_MAP = {
+V1_COL_MAP = {
     "시군": "name",
     "평균기온(°C)": "temp",
-    "지진위험도": "earthquake",
-    "태풍위험도": "typhoon",
+    "지진위험도": "earthquake_z",
+    "태풍위험도": "typhoon_z",
     "기업갯수": "companies",
     "거래금액(만원)": "price",
 }
@@ -50,7 +112,7 @@ def main() -> int:
         return 1
 
     df = pd.read_csv(SRC_CSV, encoding="utf-8-sig")
-    df = df.rename(columns=COL_MAP)[list(COL_MAP.values())]
+    df = df.rename(columns=V1_COL_MAP)[list(V1_COL_MAP.values())]
 
     regions = []
     missing_coords: list[str] = []
@@ -61,32 +123,46 @@ def main() -> int:
             missing_coords.append(name)
             continue
         lat, lng = coord
+        eq = float(row["earthquake_z"])
+        ty = float(row["typhoon_z"])
+        disaster = (eq + ty) / 2.0
+
+        factors_value = {
+            "power_stability": round(power_stability(name), 2),
+            "disaster_risk": round(disaster, 4),
+            "temp": round(float(row["temp"]), 3),
+            "price": round(float(row["price"]), 1),
+            "companies": int(row["companies"]),
+            "telecom_infra": round(telecom_infra(name), 2),
+            "it_workforce": round(it_workforce(name), 2),
+            "regional_vitality": round(regional_vitality(name), 2),
+            "renewable_access": round(renewable_access(name), 2),
+        }
+        assert set(factors_value.keys()) == {f["key"] for f in FACTORS}
+
         regions.append({
             "name": name,
             "lat": lat,
             "lng": lng,
-            "factors": {
-                "temp": round(float(row["temp"]), 3),
-                "earthquake": round(float(row["earthquake"]), 4),
-                "typhoon": round(float(row["typhoon"]), 4),
-                "companies": int(row["companies"]),
-                "price": round(float(row["price"]), 1),
-            },
+            "factors": factors_value,
         })
 
     if missing_coords:
         print(f"⚠️  좌표 없는 시군 {len(missing_coords)}개: {missing_coords}", file=sys.stderr)
 
     payload = {
-        "version": 1,
-        "source": "_v1_data/06_실거래가/가중치데이터_최종.csv",
+        "version": 2,
+        "source": [
+            "_v1_data/06_실거래가/가중치데이터_최종.csv (5개 V1 지표)",
+            "extra_data.py (5개 신규/proxy 지표)",
+        ],
         "factors": FACTORS,
         "regions": regions,
     }
 
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"✓ {len(regions)}개 시군 → {OUT_JSON.relative_to(ROOT)}")
+    print(f"✓ {len(regions)}개 시군 × {len(FACTORS)}개 지표 → {OUT_JSON.relative_to(ROOT)}")
     return 0
 
 
