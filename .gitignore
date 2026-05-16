@@ -1,0 +1,29 @@
+# V1 임시 clone (마이그레이션용)
+_v1_tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node
+node_modules/
+.vite/
+dist/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# 대용량 원본 데이터 (옵션 — 필요 시 주석 처리)
+# 02_데이터/raw/*.zip
+# 02_데이터/raw/*.shp
