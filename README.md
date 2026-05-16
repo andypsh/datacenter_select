@@ -2,17 +2,66 @@
 
 > **제14회 산업통상자원부 공공데이터 활용 아이디어 공모전** 출품작 · 제품·서비스 개발 부문
 
+## 🔗 바로가기
+
+| | | |
+|:---:|:---:|:---:|
+| [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Click_to_Open-2563eb?style=for-the-badge&logo=vercel&logoColor=white)](https://datacenter-select-ds9x.vercel.app) | [![Tech Docs](https://img.shields.io/badge/📑_기술문서-Click_to_Open-059669?style=for-the-badge&logo=readme&logoColor=white)](https://datacenter-select-ds9x.vercel.app/docs/) | [![GitHub](https://img.shields.io/badge/📁_GitHub-contest--v2--14th-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/andypsh/datacenter_select/tree/contest-v2-14th) |
+| **인터랙티브 대시보드** | **분석 흐름 + 결과 한눈에** | **소스 코드 (V2 브랜치)** |
+
 [![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.0-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![MapLibre](https://img.shields.io/badge/MapLibre-GL-396ca7?logo=maplibre&logoColor=white)](https://maplibre.org/)
 [![ECharts](https://img.shields.io/badge/Apache-ECharts-aa344d?logo=apache&logoColor=white)](https://echarts.apache.org/)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776ab?logo=python&logoColor=white)](https://python.org/)
+[![Status](https://img.shields.io/badge/Status-Production_Ready-success)](https://datacenter-select-ds9x.vercel.app)
 [![License](https://img.shields.io/badge/License-MIT-green)](#)
 
-**🚀 Live Demo**: https://datacenter-select-ds9x.vercel.app
-**📑 기술문서 (라이브)**: https://datacenter-select-ds9x.vercel.app/docs/
-**📁 GitHub**: [contest-v2-14th](https://github.com/andypsh/datacenter_select/tree/contest-v2-14th)
+---
+
+## 📊 진행 현황 (Progress)
+
+> 제출 마감 **2026-07-06** · 오늘 기준 **약 51일 남음**
+
+### ✅ 완료 (V2 → 라이브 배포까지)
+
+- [x] **공모전 요강 분석** + 과거 수상작 트렌드 정리 (`00_공모전정보/14회_요강.md`)
+- [x] **프로젝트 컨셉** 리포지셔닝 (지역균형 발전 관점 — 14회 주제 정합) (`01_프로젝트기획/컨셉.md`)
+- [x] **V1 자산 마이그레이션** (109개 시군 좌표 / 5개 V1 지표 / Vue·MapLibre 인프라)
+- [x] **파생변수 4개 생성** — `derive_indicators.py`
+  - `power` (광케이블 백본 30km 카운트)
+  - `industry` (기존 IDC 30km 카운트)
+  - `vitality` ((1-DC밀도)×0.6 + 인구감소×0.4)
+  - `renewable` (재생E 허브 거리 exp 감쇠)
+- [x] **9개 지표 통합** → `regions.json` (109시군 × 9지표)
+- [x] **민감도 분석** 18 시나리오 — 6개 시군 매우 견고 (`sensitivity_analysis.py`)
+- [x] **결과 통계표** 자동 생성 (`analyze_results.py` → `results_tables.md`)
+- [x] **Vue 대시보드** — 4탭 (지도·대시보드·비교·정책), 9 슬라이더, 시나리오 프리셋 3종
+- [x] **정책 제언 5종** 자동 생성 (`PolicyView.vue`)
+- [x] **보고서 본문** 8장 (`05_보고서/보고서.md`)
+- [x] **PPT 슬라이드** 18장 (Marp 형식, `06_발표/PPT_슬라이드.md`)
+- [x] **GitHub 푸시** (`contest-v2-14th` 브랜치) + **Vercel 자동 배포**
+- [x] **기술문서** 라이트 테마 1페이지 SPA (`docs/index.html` → `/docs/` 라이브)
+
+### ⏳ 진행 중 / 남은 작업
+
+- [ ] **대시보드 스크린샷·GIF 캡처** (보고서·PPT 임베드용)
+- [ ] PPT → PDF/PPTX 변환 (`marp 06_발표/PPT_슬라이드.md -o presentation.pptx`)
+- [ ] V2 지표 보완 데이터 추가 (한전 변전소·KOSIS GRDP·KICOX 산단)
+- [ ] 2023~2025 시계열 데이터 갱신 (현재 base 2022)
+- [ ] **datacontest.kr 제출** ← 7/6 마감
+
+### 📍 핵심 산출 결과 (요약)
+
+| 항목 | 값 |
+|---|---|
+| 분석 대상 | 109 시군 |
+| 평가 지표 | 9개 (산업부 산하 데이터 3/9) |
+| 민감도 시나리오 | 18 (가중치 ±20% × 9지표) |
+| 견고한 후보지 (18/18 Top10) | **6개** (의왕·과천·군포·음성·괴산·서천) |
+| 비수도권 Top 10 중 인구감소지역 | **9/10** |
+| 지역균형 시나리오 Top 5 | **100% 호남 인구감소지역** |
+| 자동 생성 정책 제언 | 5종 |
 
 ---
 
