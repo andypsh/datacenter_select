@@ -27,6 +27,8 @@ V1 = ROOT / "_v1_data"
 POWER_CSV = V1 / "02_계약종별전력사용량" / "년도별일반전력" / "결과" / "피벗테이블화" / "2012-2022전국.csv"
 TELECOM_CSV = V1 / "04_sw기업개수" / "광케이블 지도" / "광케이블.csv"
 SW_CSV = V1 / "04_sw기업개수" / "SW회사.csv"
+# 공공데이터포털 표준데이터 (행안부, 산업부 산하 KEA 데이터 기반)
+SOLAR_CSV = ROOT / "02_데이터" / "raw" / "KEA_신재생" / "전국태양광발전소전기사업허가정보표준데이터.csv"
 
 # 광역시 매핑 — 시군구 자치구 데이터를 광역시로 합산
 PROVINCE_TO_METRO = {
@@ -246,6 +248,73 @@ def industry_cluster_real(name: str) -> float:
 def industry_raw_count(name: str) -> int:
     """raw 회사 수 (UI 표시용)."""
     return int(_industry_features().get(name, {}).get("count", 0))
+
+
+# ============================================================
+# 4) 재생에너지 — 공공데이터포털 50k 태양광 발전소 raw → 시군별 가동 발전소 + 설비용량
+# ============================================================
+
+@lru_cache(maxsize=1)
+def _solar_features() -> dict[str, dict[str, float]]:
+    """시군별 가동 태양광 발전소 수 + 총 설비용량 (kW).
+
+    출처: data.go.kr 표준데이터 '전국태양광발전소전기사업허가정보표준데이터'
+    50,000개 발전소 raw, '제공기관명'에서 시·도 prefix 제거 후 시군 매칭.
+    """
+    df = pd.read_csv(SOLAR_CSV, encoding="cp949", low_memory=False)
+    # 정상가동만 카운트
+    df = df[df["가동상태구분명"] == "정상가동"]
+    # 제공기관명: "전북특별자치도 익산시" → "익산시", "강원특별자치도 화천군청" → "화천군"
+    def extract_region(s: str) -> str | None:
+        if not isinstance(s, str):
+            return None
+        # 광역시·도 prefix 제거
+        parts = s.split()
+        if len(parts) < 2:
+            return None
+        candidate = parts[-1].replace("청", "")  # "화천군청" → "화천군"
+        # 광역시는 첫 부분이 광역시
+        if parts[0] in PROVINCE_TO_METRO:
+            return parts[0]
+        return candidate
+
+    df["region"] = df["제공기관명"].map(extract_region)
+    # 고성군 경남/강원 구분 — 우리 데이터셋엔 고성군_경남만
+    df.loc[df["region"] == "고성군", "region"] = df.apply(
+        lambda r: "고성군_경남" if isinstance(r["제공기관명"], str) and "경상남도" in r["제공기관명"]
+                  else r["region"],
+        axis=1,
+    )
+    out: dict[str, dict[str, float]] = {}
+    for region, sub in df.dropna(subset=["region"]).groupby("region"):
+        count = len(sub)
+        capa_sum = float(sub["설비용량"].sum())
+        out[str(region)] = {"count": float(count), "capa_kw": capa_sum}
+    return out
+
+
+def renewable_access_real(name: str) -> float:
+    """재생에너지 접근성 실데이터 (0~100). 시군 가동 태양광 발전소 수 + 총 설비용량 합성.
+
+    설계: log(count) 0.5 + log(capa) 0.5 결합 후 109개 시군 정규화.
+    log를 쓰는 이유: 익산시 5092 vs 횡성군 0의 극단 분포를 부드럽게.
+    """
+    import math as _m
+    feats = _solar_features().get(name, {"count": 0.0, "capa_kw": 0.0})
+    score = 0.5 * _m.log1p(feats["count"]) + 0.5 * _m.log1p(feats["capa_kw"] / 100)
+    # 109개 시군 분포로 정규화 (coords.py 기준)
+    all_scores = []
+    for n in COORDS:
+        f = _solar_features().get(n, {"count": 0.0, "capa_kw": 0.0})
+        s = 0.5 * _m.log1p(f["count"]) + 0.5 * _m.log1p(f["capa_kw"] / 100)
+        all_scores.append(s)
+    lo, hi = min(all_scores), max(all_scores)
+    return float((score - lo) / max(hi - lo, 1e-9) * 100)
+
+
+def renewable_raw_count(name: str) -> int:
+    """raw 가동 태양광 발전소 수 (UI 표시용)."""
+    return int(_solar_features().get(name, {}).get("count", 0))
 
 
 # ============================================================

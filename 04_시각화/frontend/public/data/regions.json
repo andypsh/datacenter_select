@@ -1,11 +1,13 @@
 {
   "version": 2,
   "source": [
-    "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가·SW기업 raw count)",
+    "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가)",
     "_v1_data/02_계약종별전력사용량/.../2012-2022전국.csv (전력 안정성 파생)",
     "_v1_data/04_sw기업개수/광케이블 지도/광케이블.csv (통신 인프라 파생)",
     "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 가중 파생)",
-    "extra_data.py (IT 인력·지역활력·재생에너지 proxy)"
+    "02_데이터/raw/KEA_신재생/전국태양광발전소....csv (재생에너지 파생, 50k raw)",
+    "행안부 89개 인구감소지역 공식 리스트 (지역활력)",
+    "extra_data.py (IT 인력 proxy — KOSIS 다음 라운드)"
   ],
   "factors": [
     {
@@ -86,7 +88,7 @@
       "unit": "점",
       "direction": "higher_is_better",
       "default_weight": 9,
-      "desc": "신재생 자원 접근성 / RE100 대응 (V2 proxy)",
+      "desc": "공공데이터포털 50k 태양광 발전소 raw → 시군별 가동수+설비용량 log합성",
       "category": "ESG"
     }
   ],
@@ -102,9 +104,9 @@
         "disaster_risk": 0.1536,
         "temp": 10.923,
         "price": 15387.6,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 32.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -118,9 +120,9 @@
         "disaster_risk": 0.3836,
         "temp": 13.855,
         "price": 16654.9,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 60.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -134,9 +136,9 @@
         "disaster_risk": 0.727,
         "temp": 12.904,
         "price": 14113.9,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -150,9 +152,9 @@
         "disaster_risk": -0.3219,
         "temp": 10.217,
         "price": 14780.9,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 72.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -166,9 +168,9 @@
         "disaster_risk": 0.6052,
         "temp": 12.822,
         "price": 17664.0,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -182,9 +184,9 @@
         "disaster_risk": -0.1428,
         "temp": 13.49,
         "price": 5616.9,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -198,9 +200,9 @@
         "disaster_risk": -0.0765,
         "temp": 12.172,
         "price": 44293.1,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -214,9 +216,9 @@
         "disaster_risk": 0.1536,
         "temp": 13.255,
         "price": 2687.1,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -230,9 +232,9 @@
         "disaster_risk": 0.4192,
         "temp": 12.279,
         "price": 11929.3,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -246,9 +248,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.101,
         "price": 84954.5,
-        "it_workforce": 50.0,
+        "renewable_access": 14.87,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -262,9 +264,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.775,
         "price": 234588.0,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -278,9 +280,9 @@
         "disaster_risk": -0.0913,
         "temp": 13.34,
         "price": 12902.4,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 92.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -294,9 +296,9 @@
         "disaster_risk": 0.4274,
         "temp": 13.175,
         "price": 40021.2,
-        "it_workforce": 92.0,
+        "renewable_access": 71.93,
         "regional_vitality": 5.0,
-        "renewable_access": 25.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -310,9 +312,9 @@
         "disaster_risk": -0.1343,
         "temp": 11.68,
         "price": 28319.6,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -326,9 +328,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.085,
         "price": 5813.1,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -342,9 +344,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.91,
         "price": 211554.7,
-        "it_workforce": 75.0,
+        "renewable_access": 32.47,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -358,9 +360,9 @@
         "disaster_risk": -0.1169,
         "temp": 13.09,
         "price": 19356.7,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 60.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -374,9 +376,9 @@
         "disaster_risk": -0.0917,
         "temp": 11.973,
         "price": 7220.0,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -390,9 +392,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.578,
         "price": 34900.4,
-        "it_workforce": 50.0,
+        "renewable_access": 44.01,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -406,9 +408,9 @@
         "disaster_risk": -0.0569,
         "temp": 12.13,
         "price": 6402.8,
-        "it_workforce": 30.0,
+        "renewable_access": 86.77,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -422,9 +424,9 @@
         "disaster_risk": -0.1428,
         "temp": 13.0,
         "price": 6514.8,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -438,9 +440,9 @@
         "disaster_risk": 0.413,
         "temp": 12.177,
         "price": 8133.6,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 60.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -454,9 +456,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.675,
         "price": 30637.7,
-        "it_workforce": 75.0,
+        "renewable_access": 83.01,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -470,9 +472,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.78,
         "price": 37801.8,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 55.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -486,9 +488,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.235,
         "price": 7486.1,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 92.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -502,9 +504,9 @@
         "disaster_risk": -0.0765,
         "temp": 12.3,
         "price": 51330.3,
-        "it_workforce": 75.0,
+        "renewable_access": 69.24,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -518,9 +520,9 @@
         "disaster_risk": 0.103,
         "temp": 12.734,
         "price": 6586.4,
-        "it_workforce": 50.0,
+        "renewable_access": 93.8,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -534,9 +536,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.471,
         "price": 11036.5,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -550,9 +552,9 @@
         "disaster_risk": -0.0902,
         "temp": 14.41,
         "price": 37326.9,
-        "it_workforce": 92.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 20.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -566,9 +568,9 @@
         "disaster_risk": -0.108,
         "temp": 12.67,
         "price": 22022.8,
-        "it_workforce": 98.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 22.0
+        "it_workforce": 98.0
       }
     },
     {
@@ -582,9 +584,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.156,
         "price": 24912.0,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -598,9 +600,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.809,
         "price": 14111.4,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 92.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -614,9 +616,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.809,
         "price": 5734.1,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -630,9 +632,9 @@
         "disaster_risk": 0.4536,
         "temp": 13.2,
         "price": 7622.1,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -646,9 +648,9 @@
         "disaster_risk": -0.0399,
         "temp": 13.444,
         "price": 3295.1,
-        "it_workforce": 30.0,
+        "renewable_access": 79.14,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -662,9 +664,9 @@
         "disaster_risk": -0.1087,
         "temp": 10.65,
         "price": 10024.7,
-        "it_workforce": 30.0,
+        "renewable_access": 81.52,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -678,9 +680,9 @@
         "disaster_risk": 0.4144,
         "temp": 14.65,
         "price": 41555.8,
-        "it_workforce": 92.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 22.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -694,9 +696,9 @@
         "disaster_risk": 0.3326,
         "temp": 13.27,
         "price": 6613.1,
-        "it_workforce": 30.0,
+        "renewable_access": 92.56,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -710,9 +712,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.275,
         "price": 97069.0,
-        "it_workforce": 75.0,
+        "renewable_access": 36.36,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -726,9 +728,9 @@
         "disaster_risk": 0.5712,
         "temp": 14.415,
         "price": 9358.9,
-        "it_workforce": 50.0,
+        "renewable_access": 76.73,
         "regional_vitality": 35.0,
-        "renewable_access": 55.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -742,9 +744,9 @@
         "disaster_risk": -0.0917,
         "temp": 12.258,
         "price": 3767.6,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -758,9 +760,9 @@
         "disaster_risk": 0.7364,
         "temp": 11.843,
         "price": 4139.7,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -774,9 +776,9 @@
         "disaster_risk": 0.5715,
         "temp": 10.999,
         "price": 8161.4,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 72.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -790,9 +792,9 @@
         "disaster_risk": 0.1536,
         "temp": 13.144,
         "price": 199523.8,
-        "it_workforce": 98.0,
+        "renewable_access": 48.32,
         "regional_vitality": 5.0,
-        "renewable_access": 8.0
+        "it_workforce": 98.0
       }
     },
     {
@@ -806,9 +808,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.775,
         "price": 3842.7,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -822,9 +824,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.03,
         "price": 42510.6,
-        "it_workforce": 81.0,
+        "renewable_access": 40.67,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 81.0
       }
     },
     {
@@ -838,9 +840,9 @@
         "disaster_risk": -0.1509,
         "temp": 13.02,
         "price": 7531.0,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -854,9 +856,9 @@
         "disaster_risk": 0.1536,
         "temp": 12.368,
         "price": 29086.6,
-        "it_workforce": 92.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 38.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -870,9 +872,9 @@
         "disaster_risk": 0.3412,
         "temp": 11.556,
         "price": 140909.2,
-        "it_workforce": 81.0,
+        "renewable_access": 63.18,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 81.0
       }
     },
     {
@@ -886,9 +888,9 @@
         "disaster_risk": -0.1428,
         "temp": 12.01,
         "price": 2497.7,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -902,9 +904,9 @@
         "disaster_risk": 0.2882,
         "temp": 13.985,
         "price": 13596.6,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 92.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -918,9 +920,9 @@
         "disaster_risk": -0.0765,
         "temp": 12.56,
         "price": 39602.3,
-        "it_workforce": 75.0,
+        "renewable_access": 73.29,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -934,9 +936,9 @@
         "disaster_risk": 0.1689,
         "temp": 14.178,
         "price": 3356.6,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -950,9 +952,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.708,
         "price": 19621.5,
-        "it_workforce": 75.0,
+        "renewable_access": 85.05,
         "regional_vitality": 15.0,
-        "renewable_access": 72.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -966,9 +968,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.866,
         "price": 10285.6,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -982,9 +984,9 @@
         "disaster_risk": 0.1536,
         "temp": 12.596,
         "price": 27183.6,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -998,9 +1000,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.17,
         "price": 125396.4,
-        "it_workforce": 75.0,
+        "renewable_access": 37.04,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1014,9 +1016,9 @@
         "disaster_risk": 0.4759,
         "temp": 14.15,
         "price": 24444.8,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 55.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1030,9 +1032,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.156,
         "price": 31102.9,
-        "it_workforce": 75.0,
+        "renewable_access": 73.85,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1046,9 +1048,9 @@
         "disaster_risk": 0.1536,
         "temp": 10.492,
         "price": 11122.2,
-        "it_workforce": 30.0,
+        "renewable_access": 48.45,
         "regional_vitality": 55.0,
-        "renewable_access": 32.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1062,9 +1064,9 @@
         "disaster_risk": 0.5627,
         "temp": 15.078,
         "price": 10755.0,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 92.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1078,9 +1080,9 @@
         "disaster_risk": 0.3569,
         "temp": 11.655,
         "price": 28325.9,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1094,9 +1096,9 @@
         "disaster_risk": 0.3585,
         "temp": 12.13,
         "price": 4414.0,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1110,9 +1112,9 @@
         "disaster_risk": 0.3497,
         "temp": 13.687,
         "price": 3625.2,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1126,9 +1128,9 @@
         "disaster_risk": -0.1087,
         "temp": 12.675,
         "price": 9118.3,
-        "it_workforce": 50.0,
+        "renewable_access": 91.7,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1142,9 +1144,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.76,
         "price": 5341.8,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1158,9 +1160,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.35,
         "price": 66998.1,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1174,9 +1176,9 @@
         "disaster_risk": 0.3133,
         "temp": 12.05,
         "price": 6476.0,
-        "it_workforce": 30.0,
+        "renewable_access": 87.08,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1190,9 +1192,9 @@
         "disaster_risk": -0.0821,
         "temp": 12.88,
         "price": 8830.5,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1206,9 +1208,9 @@
         "disaster_risk": -0.0765,
         "temp": 11.78,
         "price": 106593.9,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1222,9 +1224,9 @@
         "disaster_risk": -0.3219,
         "temp": 14.334,
         "price": 30364.3,
-        "it_workforce": 92.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 25.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -1238,9 +1240,9 @@
         "disaster_risk": -0.3219,
         "temp": 10.842,
         "price": 17498.8,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 75.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1254,9 +1256,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.475,
         "price": 13655.4,
-        "it_workforce": 30.0,
+        "renewable_access": 85.98,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1270,9 +1272,9 @@
         "disaster_risk": -0.1002,
         "temp": 13.01,
         "price": 3129.1,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1286,9 +1288,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.556,
         "price": 44047.3,
-        "it_workforce": 50.0,
+        "renewable_access": 39.39,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1302,9 +1304,9 @@
         "disaster_risk": -0.3219,
         "temp": 11.83,
         "price": 47204.8,
-        "it_workforce": 75.0,
+        "renewable_access": 45.26,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1318,9 +1320,9 @@
         "disaster_risk": -0.1343,
         "temp": 12.313,
         "price": 30778.6,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1334,9 +1336,9 @@
         "disaster_risk": 0.4862,
         "temp": 12.903,
         "price": 6727.8,
-        "it_workforce": 75.0,
+        "renewable_access": 100.0,
         "regional_vitality": 15.0,
-        "renewable_access": 85.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1350,9 +1352,9 @@
         "disaster_risk": -0.0488,
         "temp": 12.157,
         "price": 14449.0,
-        "it_workforce": 92.0,
+        "renewable_access": 0.0,
         "regional_vitality": 5.0,
-        "renewable_access": 28.0
+        "it_workforce": 92.0
       }
     },
     {
@@ -1366,9 +1368,9 @@
         "disaster_risk": -0.0765,
         "temp": 11.77,
         "price": 2555.5,
-        "it_workforce": 30.0,
+        "renewable_access": 35.65,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1382,9 +1384,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.03,
         "price": 10156.4,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1398,9 +1400,9 @@
         "disaster_risk": 0.1536,
         "temp": 14.183,
         "price": 28315.9,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 85.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1414,9 +1416,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.89,
         "price": 5212.3,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1430,9 +1432,9 @@
         "disaster_risk": -0.1165,
         "temp": 10.648,
         "price": 7199.3,
-        "it_workforce": 75.0,
+        "renewable_access": 78.11,
         "regional_vitality": 100.0,
-        "renewable_access": 48.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1446,9 +1448,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.5,
         "price": 9516.2,
-        "it_workforce": 30.0,
+        "renewable_access": 72.39,
         "regional_vitality": 55.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1462,9 +1464,9 @@
         "disaster_risk": -0.1513,
         "temp": 10.975,
         "price": 2413.1,
-        "it_workforce": 30.0,
+        "renewable_access": 91.36,
         "regional_vitality": 100.0,
-        "renewable_access": 85.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1478,9 +1480,9 @@
         "disaster_risk": 0.6704,
         "temp": 13.195,
         "price": 9205.6,
-        "it_workforce": 75.0,
+        "renewable_access": 87.35,
         "regional_vitality": 15.0,
-        "renewable_access": 55.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1494,9 +1496,9 @@
         "disaster_risk": 0.3836,
         "temp": 12.002,
         "price": 24502.5,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "renewable_access": 48.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1510,9 +1512,9 @@
         "disaster_risk": 0.6744,
         "temp": 13.597,
         "price": 6100.9,
-        "it_workforce": 30.0,
+        "renewable_access": 75.27,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1526,9 +1528,9 @@
         "disaster_risk": -0.1165,
         "temp": 14.513,
         "price": 13956.6,
-        "it_workforce": 75.0,
+        "renewable_access": 80.75,
         "regional_vitality": 15.0,
-        "renewable_access": 55.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1542,9 +1544,9 @@
         "disaster_risk": 0.1536,
         "temp": 12.78,
         "price": 24208.3,
-        "it_workforce": 75.0,
+        "renewable_access": 88.64,
         "regional_vitality": 15.0,
-        "renewable_access": 72.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1558,9 +1560,9 @@
         "disaster_risk": 0.5967,
         "temp": 12.915,
         "price": 6611.7,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 60.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1574,9 +1576,9 @@
         "disaster_risk": -0.1343,
         "temp": 11.58,
         "price": 5633.9,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1590,9 +1592,9 @@
         "disaster_risk": 0.4758,
         "temp": 12.302,
         "price": 13797.3,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 48.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1606,9 +1608,9 @@
         "disaster_risk": 0.1536,
         "temp": 11.086,
         "price": 8717.7,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 75.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1622,9 +1624,9 @@
         "disaster_risk": 0.253,
         "temp": 11.247,
         "price": 8951.0,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 48.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1638,9 +1640,9 @@
         "disaster_risk": 0.6036,
         "temp": 12.413,
         "price": 18133.6,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "renewable_access": 60.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1654,9 +1656,9 @@
         "disaster_risk": -0.1343,
         "temp": 12.687,
         "price": 6496.4,
-        "it_workforce": 30.0,
+        "renewable_access": 74.29,
         "regional_vitality": 100.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1670,9 +1672,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.856,
         "price": 35283.0,
-        "it_workforce": 75.0,
+        "renewable_access": 83.42,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1686,9 +1688,9 @@
         "disaster_risk": -0.3219,
         "temp": 10.782,
         "price": 24393.8,
-        "it_workforce": 50.0,
+        "renewable_access": 0.0,
         "regional_vitality": 35.0,
-        "renewable_access": 32.0
+        "it_workforce": 50.0
       }
     },
     {
@@ -1702,9 +1704,9 @@
         "disaster_risk": 0.1788,
         "temp": 13.329,
         "price": 11684.4,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 60.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1718,9 +1720,9 @@
         "disaster_risk": -0.3219,
         "temp": 13.4,
         "price": 45217.9,
-        "it_workforce": 75.0,
+        "renewable_access": 44.09,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1734,9 +1736,9 @@
         "disaster_risk": 0.6056,
         "temp": 13.46,
         "price": 7609.8,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 55.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1750,9 +1752,9 @@
         "disaster_risk": 0.1536,
         "temp": 12.307,
         "price": 7617.8,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 55.0,
-        "renewable_access": 72.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1766,9 +1768,9 @@
         "disaster_risk": 0.3836,
         "temp": 9.059,
         "price": 5884.7,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 75.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1782,9 +1784,9 @@
         "disaster_risk": -0.3219,
         "temp": 12.517,
         "price": 22948.5,
-        "it_workforce": 75.0,
+        "renewable_access": 0.0,
         "regional_vitality": 15.0,
-        "renewable_access": 32.0
+        "it_workforce": 75.0
       }
     },
     {
@@ -1798,9 +1800,9 @@
         "disaster_risk": 0.399,
         "temp": 13.072,
         "price": 8033.2,
-        "it_workforce": 30.0,
+        "renewable_access": 85.6,
         "regional_vitality": 100.0,
-        "renewable_access": 92.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1814,9 +1816,9 @@
         "disaster_risk": 0.1536,
         "temp": 9.272,
         "price": 5156.8,
-        "it_workforce": 30.0,
+        "renewable_access": 79.56,
         "regional_vitality": 100.0,
-        "renewable_access": 75.0
+        "it_workforce": 30.0
       }
     },
     {
@@ -1830,9 +1832,9 @@
         "disaster_risk": -0.3219,
         "temp": 10.08,
         "price": 6909.7,
-        "it_workforce": 30.0,
+        "renewable_access": 0.0,
         "regional_vitality": 100.0,
-        "renewable_access": 75.0
+        "it_workforce": 30.0
       }
     }
   ]

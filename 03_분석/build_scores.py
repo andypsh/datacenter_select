@@ -28,12 +28,13 @@ from derived import (
     industry_cluster_real,
     industry_raw_count,
     power_stability_real,
+    renewable_access_real,
+    renewable_raw_count,
     telecom_infra_real,
 )
 from extra_data import (
     it_workforce,  # proxy (KOSIS 실데이터 교체 TODO)
     regional_vitality,  # 행안부 89개 인구감소지역 (공식)
-    renewable_access,  # proxy (KEA 실데이터 교체 TODO)
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -93,7 +94,7 @@ FACTORS = [
     {
         "key": "renewable_access", "label": "재생에너지", "unit": "점",
         "direction": "higher_is_better", "default_weight": 9,
-        "desc": "신재생 자원 접근성 / RE100 대응 (V2 proxy)",
+        "desc": "공공데이터포털 50k 태양광 발전소 raw → 시군별 가동수+설비용량 log합성",
         "category": "ESG",
     },
 ]
@@ -140,10 +141,12 @@ def main() -> int:
             "disaster_risk": round(disaster, 4),
             "temp": round(float(row["temp"]), 3),
             "price": round(float(row["price"]), 1),
-            # 아직 proxy (다음 라운드 교체 대상)
-            "it_workforce": round(it_workforce(name), 2),
+            # 실데이터 (KEA 신재생)
+            "renewable_access": round(renewable_access_real(name), 2),
+            # 행안부 89개 인구감소지역 (공식)
             "regional_vitality": round(regional_vitality(name), 2),
-            "renewable_access": round(renewable_access(name), 2),
+            # 아직 proxy (KOSIS IT 종사자/GRDP 다음 라운드 교체)
+            "it_workforce": round(it_workforce(name), 2),
         }
         assert set(factors_value.keys()) == {f["key"] for f in FACTORS}
 
@@ -160,11 +163,13 @@ def main() -> int:
     payload = {
         "version": 2,
         "source": [
-            "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가·SW기업 raw count)",
+            "_v1_data/06_실거래가/가중치데이터_최종.csv (자연재해·기온·실거래가)",
             "_v1_data/02_계약종별전력사용량/.../2012-2022전국.csv (전력 안정성 파생)",
             "_v1_data/04_sw기업개수/광케이블 지도/광케이블.csv (통신 인프라 파생)",
             "_v1_data/04_sw기업개수/SW회사.csv (산업 집적도 가중 파생)",
-            "extra_data.py (IT 인력·지역활력·재생에너지 proxy)",
+            "02_데이터/raw/KEA_신재생/전국태양광발전소....csv (재생에너지 파생, 50k raw)",
+            "행안부 89개 인구감소지역 공식 리스트 (지역활력)",
+            "extra_data.py (IT 인력 proxy — KOSIS 다음 라운드)",
         ],
         "factors": FACTORS,
         "regions": regions,
