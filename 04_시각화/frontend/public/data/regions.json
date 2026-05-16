@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "source": "06_실거래가/가중치데이터_최종.csv",
+  "source": "_v1_data/06_실거래가/가중치데이터_최종.csv",
   "factors": [
     {
       "key": "temp",

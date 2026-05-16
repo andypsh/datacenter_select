@@ -1,7 +1,7 @@
-"""V1 CSV → V2 frontend JSON 빌드 스크립트.
+"""V1 CSV → 프론트엔드 JSON 빌드 스크립트.
 
-입력: ../06_실거래가/가중치데이터_최종.csv
-출력: ../frontend/public/data/regions.json
+입력: ../_v1_data/06_실거래가/가중치데이터_최종.csv
+출력: ../04_시각화/frontend/public/data/regions.json
 
 사용:
     python build_scores.py
@@ -18,8 +18,8 @@ import pandas as pd
 from coords import COORDS
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC_CSV = ROOT / "06_실거래가" / "가중치데이터_최종.csv"
-OUT_JSON = ROOT / "frontend" / "public" / "data" / "regions.json"
+SRC_CSV = ROOT / "_v1_data" / "06_실거래가" / "가중치데이터_최종.csv"
+OUT_JSON = ROOT / "04_시각화" / "frontend" / "public" / "data" / "regions.json"
 
 FACTORS = [
     {"key": "temp", "label": "평균기온", "unit": "°C", "direction": "lower_is_better",
@@ -79,7 +79,7 @@ def main() -> int:
 
     payload = {
         "version": 1,
-        "source": "06_실거래가/가중치데이터_최종.csv",
+        "source": "_v1_data/06_실거래가/가중치데이터_최종.csv",
         "factors": FACTORS,
         "regions": regions,
     }
