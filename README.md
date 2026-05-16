@@ -99,5 +99,40 @@ npm run dev
 - [ ] V2 4개 지표 실데이터 수집 (전력/산단/지역활력/재생에너지)
 - [ ] npm install + 빌드 검증
 - [ ] 보고서 / PPT 완성
-- [ ] Streamlit Cloud 또는 GitHub Pages 배포
+- [ ] Vercel 배포 (또는 GitHub Pages / Netlify)
 - [ ] 7/6 제출
+
+---
+
+## 배포 (Vercel)
+
+Vue 3 + Vite 프로젝트라 **Vercel이 가장 간단**. CLI 또는 GitHub 연동 모두 OK.
+
+### 옵션 A: Vercel CLI (가장 빠름)
+```powershell
+cd C:\dev\datacenter_contest\04_시각화\frontend
+npm install -g vercel
+vercel login
+vercel --prod
+# → https://datacenter-contest-xxx.vercel.app
+```
+
+빌드 설정 자동 감지(`vite`). 첫 배포 후 `vercel --prod` 한 번 더 누르면 production URL 확정.
+
+### 옵션 B: GitHub 연동 (자동 재배포)
+1. https://vercel.com/new → "Import Git Repository"
+2. `andypsh/datacenter_contest_v2` 선택
+3. **Root Directory**: `04_시각화/frontend` ← 중요 (모노레포 구조라 필수)
+4. Framework Preset: **Vite** (자동 감지됨)
+5. Build Command: `npm run build` / Output: `dist/`
+6. Deploy → push할 때마다 자동 재배포
+
+### 대안: Netlify
+- 거의 동일. `netlify deploy --prod --dir=04_시각화/frontend/dist`
+- GitHub 연동 시 Base directory를 `04_시각화/frontend`로
+
+### 대안: GitHub Pages
+- 무료지만 SPA 라우팅 + base path 손봐야 함. `vite.config.ts`에 `base: '/datacenter_contest_v2/'` 추가 필요.
+- Vercel이 훨씬 편함.
+
+> ⚠️ **Node 18+ 필수**. 현재 Node 16이면 `nvm-windows`로 18 LTS 설치 먼저.

@@ -86,7 +86,7 @@
 - 시계열 데이터 추가
 
 ## 18. 데모 URL & QR (1장)
-- 대시보드 배포 URL
+- 대시보드 배포 URL (Vercel: `datacenter-contest-v2.vercel.app` 예정)
 - GitHub 레포 QR 코드
 - 영상 데모 링크
 
