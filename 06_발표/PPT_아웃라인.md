@@ -86,8 +86,9 @@
 - 시계열 데이터 추가
 
 ## 18. 데모 URL & QR (1장)
-- 대시보드 배포 URL (Vercel: `datacenter-contest-v2.vercel.app` 예정)
-- GitHub 레포 QR 코드
+- **🚀 대시보드: https://datacenter-select-ds9x.vercel.app**
+- GitHub: https://github.com/andypsh/datacenter_select/tree/contest-v2-14th
+- QR 코드로 변환해서 슬라이드에 임베드 (qr-code-generator.com 등)
 - 영상 데모 링크
 
 ## 19. 마무리 (1장)

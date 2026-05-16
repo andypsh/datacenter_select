@@ -5,7 +5,8 @@
 > **공간 단위**: 시군구 (전국 109개)
 > **마감**: 2026-07-06
 > **공식**: https://datacontest.kr
-> **GitHub V1 베이스**: https://github.com/andypsh/datacenter_select
+> **GitHub**: https://github.com/andypsh/datacenter_select/tree/contest-v2-14th
+> **🚀 라이브 데모**: https://datacenter-select-ds9x.vercel.app
 
 ---
 
