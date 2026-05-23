@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 · 점수 계산 로직 — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html" class="active"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">06 · SCORING</div>
+      <h1><span class="doc-num">06</span>점수 계산 로직</h1>
+      <p class="lead">raw 값 → 정규화 → 방향 반전 → 가중평균. 슬라이더 움직이면 즉시 재계산.</p>
+    </header>
+
+    <h2>전체 흐름</h2>
+    <pre><code>raw[N×9 행렬]                  ┐
+  └─ min-max 정규화 ──→ norm[N×9 ∈ [0,1]]
+       └─ direction이 lower_is_better면 (1 − v)로 반전
+            └─ weights × norm 가중평균 ──→ score[N ∈ [0,1]]
+                 └─ 내림차순 정렬 ──→ rank
+
+(N = 109 시군)</code></pre>
+
+    <h2>1단계: min-max 정규화</h2>
+    <p>각 지표별로 109개 시군 분포에서 min/max 사용.</p>
+    <pre><code>function normalizeMinMax(values: number[]): number[] {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;          // div-by-zero 방지
+  return values.map((v) => (v - min) / span);
+}</code></pre>
+    <div class="callout">
+      <strong>왜 z-score 아니고 min-max?</strong> 사용자에게 [0,1] 절대 척도가 직관적. 레이더 차트에서
+      "최고치 1, 최저치 0" 한눈에 보임. 정규분포 가정 안 해도 됨 (회사수처럼 한쪽 꼬리 긴 분포에 강함).
+    </div>
+
+    <h2>2단계: 방향 반전</h2>
+    <p>지표마다 "높을수록 좋음" / "낮을수록 좋음"이 다름. 모든 점수를 "높을수록 좋음"으로 통일.</p>
+    <pre><code>for (const f of factors.value) {
+  const raw = regions.value.map((r) => r.factors[f.key]);
+  const n = normalizeMinMax(raw);
+  out[f.key] = f.direction === "lower_is_better" ? n.map((v) => 1 - v) : n;
+}</code></pre>
+
+    <h3>방향별 지표</h3>
+    <table>
+      <thead><tr><th>방향</th><th>지표</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td>↑ higher</td><td>전력 안정성, 산업 집적도, 통신 인프라, IT 인력, 지역활력, 재생에너지</td><td>그대로 사용</td></tr>
+        <tr><td>↓ lower</td><td>자연재해 위험, 평균기온, 토지 비용</td><td><code>1 − v</code>로 반전</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3단계: 가중평균 (Pinia computed)</h2>
+    <pre><code>const scored = computed&lt;ScoredRegion[]&gt;(() => {
+  const sum = weightSum.value || 1;
+  return regions.value.map((r, i) => {
+    const componentScores = {};
+    let total = 0;
+    for (const f of factors.value) {
+      const v = normalized.value[f.key][i];     // [0,1]
+      const w = weights.value[f.key] / sum;      // 상대 가중치
+      componentScores[f.key] = v;
+      total += v * w;
+    }
+    return { ...r, score: total, rank: 0, componentScores };
+  });
+});</code></pre>
+    <p><code>weightSum</code>으로 정규화하기 때문에 사용자가 슬라이더로 합을 100% 안 맞춰도 됨.</p>
+
+    <h2>4단계: 순위 부여</h2>
+    <pre><code>const sorted = [...scored.value].sort((a, b) => b.score - a.score);
+sorted.forEach((r, i) => (r.rank = i + 1));   // 1, 2, 3, ...
+return scored.value;   // 원본 순서 유지하되 rank 채움</code></pre>
+
+    <h2>기본 가중치 (default_weight)</h2>
+    <p>JSON에서 로드. 합 100%.</p>
+    <pre><code>// regions.json factors[*].default_weight 합 = 100
+power_stability:    18   ← 전력은 데이터센터의 본질
+disaster_risk:      10
+temp:                8
+price:              10
+companies:          10
+telecom_infra:       9
+it_workforce:        8
+regional_vitality:  18   ← 공모전 주제 직격
+renewable_access:    9
+                  ─────
+                   100</code></pre>
+
+    <h2>점수 계산 예시</h2>
+    <p><strong>제천시</strong>를 예로:</p>
+    <table>
+      <thead><tr><th>지표</th><th>raw</th><th>방향</th><th>정규화</th><th>가중치</th><th>기여</th></tr></thead>
+      <tbody>
+        <tr><td>전력 안정성</td><td class="tabular">48.9</td><td>↑</td><td class="tabular">0.05</td><td class="tabular">18%</td><td class="tabular">0.009</td></tr>
+        <tr><td>자연재해 위험</td><td class="tabular">-0.12</td><td>↓</td><td class="tabular">0.93</td><td class="tabular">10%</td><td class="tabular">0.093</td></tr>
+        <tr><td>평균기온</td><td class="tabular">10.65°C</td><td>↓</td><td class="tabular">0.94</td><td class="tabular">8%</td><td class="tabular">0.075</td></tr>
+        <tr><td>토지 비용</td><td class="tabular">7,199만원</td><td>↓</td><td class="tabular">0.96</td><td class="tabular">10%</td><td class="tabular">0.096</td></tr>
+        <tr><td>산업 집적도</td><td class="tabular">43</td><td>↑</td><td class="tabular">0.003</td><td class="tabular">10%</td><td class="tabular">0.000</td></tr>
+        <tr><td>통신 인프라</td><td class="tabular">20.9</td><td>↑</td><td class="tabular">0.21</td><td class="tabular">9%</td><td class="tabular">0.019</td></tr>
+        <tr><td>IT 인력</td><td class="tabular">34.7</td><td>↑</td><td class="tabular">0.35</td><td class="tabular">8%</td><td class="tabular">0.028</td></tr>
+        <tr><td>지역활력</td><td class="tabular">100</td><td>↑</td><td class="tabular">1.00</td><td class="tabular">18%</td><td class="tabular">0.180</td></tr>
+        <tr><td>재생에너지</td><td class="tabular">78.1</td><td>↑</td><td class="tabular">0.78</td><td class="tabular">9%</td><td class="tabular">0.070</td></tr>
+        <tr><td colspan="5"><strong>종합점수</strong></td><td class="tabular"><strong>0.570</strong></td></tr>
+      </tbody>
+    </table>
+    <p>(* 실제 종합점수는 0.552 — 정규화 시 dataset 전체 분포 기준이라 위 예시는 근사값)</p>
+
+    <h2>반응성 보장</h2>
+    <p>Pinia <code>computed</code>는 dependency 추적이 자동. 슬라이더가 <code>weights[key]</code>를 갱신하면:</p>
+    <ol>
+      <li><code>weightSum</code> 재계산 (의존: weights)</li>
+      <li><code>scored</code> 재계산 (의존: weights, weightSum, normalized)</li>
+      <li><code>topN</code> 재계산 (의존: scored)</li>
+      <li><code>compared</code> 재계산 (의존: scored, compareSet)</li>
+      <li>MapView 마커 색·크기 재렌더, Dashboard 차트 재드로우, CompareView 레이더 재드로우</li>
+    </ol>
+    <p>모두 <strong>한 frame 안에서</strong> 일어남 — 슬라이더 ↔ 지도 ms 단위 연동.</p>
+
+    <h2>가중평균 외 대안 (향후 검토)</h2>
+    <table>
+      <thead><tr><th>방법</th><th>장점</th><th>단점</th><th>도입 시기</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>현재: 단순 가중평균</td>
+          <td>해석 쉬움, 빠름</td>
+          <td>지표 간 상관관계 무시</td>
+          <td>1차 완료</td>
+        </tr>
+        <tr>
+          <td>AHP (Analytic Hierarchy Process)</td>
+          <td>전문가 쌍대비교 → 일관성 검증 가능</td>
+          <td>가중치 도출 별도 도구 필요</td>
+          <td>보고서용 검증 도구로</td>
+        </tr>
+        <tr>
+          <td>Entropy method</td>
+          <td>데이터 자체에서 객관 가중치 도출</td>
+          <td>주관 가중과 결과 비교 필요</td>
+          <td>민감도 분석</td>
+        </tr>
+        <tr>
+          <td>TOPSIS</td>
+          <td>이상해/반이상해 거리 기반</td>
+          <td>가중평균 결과와 보통 유사</td>
+          <td>보고서 보조</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer class="doc-footer">
+      <a class="prev" href="05-frontend.html">
+        <div class="dir">← 이전</div><div>프론트엔드 (Vue)</div>
+      </a>
+      <a class="next" href="07-results.html">
+        <div class="dir">다음 →</div><div>현재 결과 Top 10</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 · 데이터 소스 — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html" class="active"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">03 · DATA</div>
+      <h1><span class="doc-num">03</span>데이터 소스</h1>
+      <p class="lead">9개 지표가 어느 데이터에서 어떻게 도출되는지 — 출처별 정리.</p>
+    </header>
+
+    <h2>출처별 분류</h2>
+    <table>
+      <thead><tr><th>출처</th><th>위치</th><th>관리 방식</th><th>사용 지표</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag v1">V1</span> 2022 보존 데이터</td><td><code>_v1_data/</code></td><td>git 추적 (대용량 제외)</td><td>지표 1·2·3·4·5·6·7</td></tr>
+        <tr><td><span class="tag real">KEA</span> 공공데이터포털</td><td><code>02_데이터/raw/KEA_신재생/</code></td><td>git 추적 (8.2MB CSV)</td><td>지표 9</td></tr>
+        <tr><td><span class="tag official">행안부</span> 공식 리스트</td><td><code>03_분석/extra_data.py</code> 하드코딩</td><td>코드 내 set</td><td>지표 8</td></tr>
+      </tbody>
+    </table>
+
+    <h2>V1 데이터 (2022 데이터센터 입지 분석 자료)</h2>
+    <p>2022년 분석 당시 수집·가공된 데이터. 본 프로젝트의 5개 지표 (자연재해·기온·실거래가·산업집적도·통신·전력)의 기반.</p>
+
+    <h3>활용한 V1 CSV</h3>
+    <table>
+      <thead><tr><th>파일</th><th>크기</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>06_실거래가/가중치데이터_최종.csv</code></td>
+          <td class="tabular">9.6 KB</td>
+          <td>지표 2·3·4 (자연재해·기온·실거래가) raw 값</td>
+        </tr>
+        <tr>
+          <td><code>02_계약종별전력사용량/.../2012-2022전국.csv</code></td>
+          <td class="tabular">3.7 MB</td>
+          <td>지표 1 (전력 안정성) — 시군별 11년치 월간 전력사용량 시계열</td>
+        </tr>
+        <tr>
+          <td><code>04_sw기업개수/광케이블 지도/광케이블.csv</code></td>
+          <td class="tabular">4 KB</td>
+          <td>지표 6 (통신 인프라) — 66 노드 위경도</td>
+        </tr>
+        <tr>
+          <td><code>04_sw기업개수/SW회사.csv</code></td>
+          <td class="tabular">12 MB</td>
+          <td>지표 5·7 (산업집적도·IT인력) — 40,722 회사 raw + 기업규모</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>대용량 raw (gitignore)</h3>
+    <p>다음 파일들은 GitHub 100MB 한도 회피 + 깃 리포 가벼움 위해 <code>.gitignore</code> 처리. 로컬에서만 사용:</p>
+    <pre><code># 한전 지번별 에너지 raw (각 148MB × 4)
+_v1_data/01_데이터센터/01_데이터센터_시군구법정동번지코드/지번별에너지/01_월별지번별에너지사용량_전기/
+
+# 연도별 일반전력 raw (수십 MB / 연도)
+_v1_data/02_계약종별전력사용량/년도별일반전력/2012/
+... (~2022)
+
+# SW 회사 raw 자체는 12 MB이지만 git에 추적 (재현성 위해)
+_v1_data/04_sw기업개수/SW회사.csv  ← 추적됨</code></pre>
+
+    <h2>KEA 데이터 (Chrome MCP로 자동 수집)</h2>
+
+    <h3>전국태양광발전소전기사업허가정보표준데이터</h3>
+    <ul>
+      <li>출처: <a href="https://www.data.go.kr/data/15107742/standard.do">공공데이터포털 표준데이터 (data ID 15107742)</a></li>
+      <li>제공기관: 산업통상자원부 산하 + 지자체 종합</li>
+      <li>크기: 8.2 MB CSV (cp949 인코딩)</li>
+      <li>레코드: <strong>50,000개 태양광 발전소</strong> — 정상가동 47,705 / 가동중단 1,830 / 폐기 465</li>
+      <li>주요 컬럼:
+        <code>태양광발전시설명, 소재지도로명/지번주소, 위도, 경도, 설비용량(kW),
+        가동상태구분명, 설치연도, 허가일자, 허가기관, 제공기관명</code>
+      </li>
+    </ul>
+
+    <h3>수집 절차 (재현 가이드)</h3>
+    <ol>
+      <li><a href="https://www.data.go.kr">data.go.kr</a> 검색창 → "신재생에너지 발전소"</li>
+      <li>표준데이터셋 영역에서 <strong>"전국태양광발전소전기사업허가정보표준데이터"</strong> 클릭</li>
+      <li>상세 페이지 우측 다운로드 영역에서 <strong>CSV</strong> 버튼</li>
+      <li>받은 파일을 <code>02_데이터/raw/KEA_신재생/</code>에 저장</li>
+      <li><code>python build_scores.py</code> 재실행</li>
+    </ol>
+    <div class="callout note">
+      Chrome MCP의 <code>fn_fileDataDown</code> 또는 표준데이터 CSV 버튼 직접 클릭 둘 다 동작 확인 완료.
+    </div>
+
+    <h2>행안부 인구감소지역</h2>
+    <p>출처: <a href="https://www.mois.go.kr">행정안전부</a> 2021-11 지정 공식 리스트. 89개 시·군·구.</p>
+    <p>본 데이터셋의 109 시군 중 <strong>44개가 매칭</strong> (자치구는 우리 데이터셋에 없어 제외).</p>
+    <pre><code># 03_분석/extra_data.py 발췌
+POPULATION_DECLINE: set[str] = {
+    "가평군",
+    "홍천군", "화천군", "횡성군",
+    "괴산군", "보은군", "영동군", "옥천군", "음성군", "제천시",
+    "공주시", "금산군", "논산시", "서천군", "예산군", "청양군", "태안군",
+    "고창군", "김제시", "부안군", "순창군", "임실군", "정읍시", "진안군",
+    "담양군", "보성군", "신안군", "영암군", "장성군", "화순군",
+    "경주시", "고령군", "군위군", "상주시", "성주군", "영천시", "청도군",
+    "고성군_경남", "밀양시", "산청군", "의령군", "창녕군", "함안군",
+}</code></pre>
+
+    <h2>못 가져온 데이터 (시도했으나 차단됨)</h2>
+    <table>
+      <thead><tr><th>데이터</th><th>출처 시도</th><th>결과</th><th>우회</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>시군구별 IT 종사자</td>
+          <td>KOSIS (kosis.kr)</td>
+          <td>Chrome MCP 도메인 차단</td>
+          <td>V1 SW회사 raw × 규모별 표준 종사자 추정으로 대체</td>
+        </tr>
+        <tr>
+          <td>시도별 GRDP</td>
+          <td>KOSIS</td>
+          <td>동일</td>
+          <td>지역활력 지표에 GRDP 결합은 보류 (행안부 binary만)</td>
+        </tr>
+        <tr>
+          <td>SGIS 종사자수 순위</td>
+          <td>data.go.kr</td>
+          <td>다운 성공 but 부적합 (PC방·가구 등 생활업종)</td>
+          <td>버림</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>라이선스</h2>
+    <ul>
+      <li>data.go.kr 데이터: <strong>공공누리 1유형</strong> (출처표시) — 출처 명시 + 변형 허용</li>
+      <li>V1 데이터: 2022 학내 프로젝트 결과물 (재구성 + 인용)</li>
+      <li>본 코드: 내부 분석용 (외부 공개 전 라이선스 결정 필요)</li>
+    </ul>
+
+    <footer class="doc-footer">
+      <a class="prev" href="02-indicators.html">
+        <div class="dir">← 이전</div><div>9개 평가지표 상세</div>
+      </a>
+      <a class="next" href="04-analysis.html">
+        <div class="dir">다음 →</div><div>분석 코드 (Python)</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

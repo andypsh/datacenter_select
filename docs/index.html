@@ -506,8 +506,25 @@ renewable mean=0.286   min=0.000   max=1.000</code></pre>
       </section>
 
       <!-- 10. Reproduce -->
+      <section id="deepdive">
+        <h2><span class="num">10</span> 상세 기술 문서 (Deep Dive)</h2>
+        <p>아래 9개 페이지는 본 index의 각 섹션을 더 깊이 풀어쓴 상세 문서.
+        다크 테마 + 좌측 사이드바 nav. 코드/데이터 구조/의사결정 로그까지 포함.</p>
+        <ul>
+          <li><a href="01-overview.html">01 · 프로젝트 개요</a> — 14회 공모전 요강, 3대 메시지, 차별화 포인트</li>
+          <li><a href="02-indicators.html">02 · 9개 평가지표 상세</a> — 각 지표의 의미·방향·산출 로직</li>
+          <li><a href="03-data-sources.html">03 · 데이터 소스</a> — V1/KEA/행안부 출처, 수집 절차</li>
+          <li><a href="04-analysis.html">04 · 분석 코드 (Python)</a> — 모듈 구성과 데이터 흐름</li>
+          <li><a href="05-frontend.html">05 · 프론트엔드 (Vue)</a> — Vue 3 + Vite + TS 아키텍처</li>
+          <li><a href="06-scoring.html">06 · 점수 계산 로직</a> — 정규화 + 가중평균 수식</li>
+          <li><a href="07-results.html">07 · 현재 결과 Top 10</a> — 후보지 + 신호 분리 검증</li>
+          <li><a href="08-history.html">08 · V1 → V2 마이그레이션</a> — 의사결정 로그</li>
+          <li><a href="09-roadmap.html">09 · TODO 로드맵</a> — P0/P1/P2 + 알려진 한계</li>
+        </ul>
+      </section>
+
       <section id="reproduce">
-        <h2><span class="num">10</span> 재현 방법</h2>
+        <h2><span class="num">11</span> 재현 방법</h2>
         <h3>분석</h3>
         <pre><code>cd 03_분석
 pip install -r requirements.txt

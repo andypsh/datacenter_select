@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 · V1 → V2 마이그레이션 — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html" class="active"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">08 · HISTORY</div>
+      <h1><span class="doc-num">08</span>V1 → V2 마이그레이션</h1>
+      <p class="lead">2022 V1 정적 분석에서 2026 V2 인터랙티브 대시보드까지. 폴더·기술·데이터 단계별 진화.</p>
+    </header>
+
+    <h2>전체 타임라인</h2>
+    <table>
+      <thead><tr><th>커밋</th><th>변경</th><th>핵심</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="tabular">dfa5e67</td>
+          <td>init: V2 프로젝트 (DATA/V2)</td>
+          <td>V1의 정리본을 베이스로 시작, .gitignore</td>
+        </tr>
+        <tr>
+          <td class="tabular">eb11729</td>
+          <td>feat: Vue 3 인터랙티브 웹앱 + Python 모던 분석 스캐폴딩</td>
+          <td>analysis/ + frontend/ + 5개 지표</td>
+        </tr>
+        <tr>
+          <td class="tabular">a68b8dc</td>
+          <td>fix: Node 16 호환 + ECharts 0×0 버그</td>
+          <td>Vite 6 → 4.5 다운그레이드, v-if 사용</td>
+        </tr>
+        <tr>
+          <td class="tabular">3e43980</td>
+          <td>refactor: 공모전 폴더 구조로 통합</td>
+          <td>DATA/V2 → 공모전/ 이동, _v1_data로 V1 분리</td>
+        </tr>
+        <tr>
+          <td class="tabular">81c714e</td>
+          <td>feat: 9개 평가지표 확장</td>
+          <td>5개 → 9개 (4개 신규 proxy)</td>
+        </tr>
+        <tr>
+          <td class="tabular">17429c4</td>
+          <td>feat: 3개 지표를 V1 raw에서 실측 파생변수로 교체</td>
+          <td>derived.py 추가 (전력·통신·산업)</td>
+        </tr>
+        <tr>
+          <td class="tabular">50ecb13</td>
+          <td>feat: 재생에너지를 KEA 실데이터로 교체</td>
+          <td>data.go.kr 50k 태양광 발전소 직접 수집</td>
+        </tr>
+        <tr>
+          <td class="tabular">75791d8</td>
+          <td>feat: IT 인력도 SW회사 raw에서 종사자 추정</td>
+          <td>9개 지표 모두 실측/공식 데이터 — proxy zero</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>폴더 구조 변천사</h2>
+
+    <h3>2022 V1 (원본)</h3>
+    <pre><code>Desktop/DATA/
+├── 데이터센터_프로젝트/          # 원본 작업
+├── 데이터센터_프로젝트_정리/      # 주제별 정리본 (07조)
+└── 데이터센터_최적입지선정_행안부/ # 2023 행안부 공모전 결과물</code></pre>
+
+    <h3>2026 V2 1차 — DATA/V2 (commit dfa5e67~a68b8dc)</h3>
+    <pre><code>Desktop/DATA/데이터센터_프로젝트_V2/
+├── analysis/             # Python (build_scores.py, coords.py)
+├── frontend/             # Vue 3 + Vite + TS
+└── 01_~07_, 기타_자료, 발표자료   # V1 데이터 그대로</code></pre>
+
+    <h3>2026 V2 2차 — 공모전 통합 (commit 3e43980 이후, 현재)</h3>
+    <pre><code>Desktop/공모전/                   ← 라이브 git 리포 (origin: andypsh/datacenter_select)
+├── 00_공모전정보/14회_요강.md
+├── 01_프로젝트기획/
+│   ├── 컨셉_리포지셔닝.md
+│   └── 산출물_사양.md
+├── 02_데이터/
+│   ├── raw/KEA_신재생/...         ← 8.2MB CSV (git 추적)
+│   ├── processed/
+│   └── 출처매핑.md
+├── 03_분석/
+│   ├── coords.py
+│   ├── extra_data.py
+│   ├── derived.py                 ← 5개 실데이터 파생함수
+│   ├── build_scores.py
+│   └── requirements.txt
+├── 04_시각화/frontend/             ← Vue 앱
+├── 05_보고서/                     ← 빈 (TODO)
+├── 06_발표/                       ← 빈 (TODO)
+├── _v1_data/                      ← V1 reference (DATA/V2의 01_~07_ 이동)
+└── docs/                          ← 이 기술 문서</code></pre>
+
+    <h2>주요 결정 (의사결정 로그)</h2>
+
+    <h3>결정 1: Vue 3 vs Streamlit (frontend)</h3>
+    <p><strong>선택</strong>: Vue 3.</p>
+    <p><strong>근거</strong>: 슬라이더-지도 반응성, 디자인 자유도, 정적 호스팅 영구 무료, 제품·서비스 부문 정합성.</p>
+    <p><strong>대안 검토</strong>: 다른 세션 산출물(<code>산출물_사양.md</code> 초안)에 Streamlit 적혀 있었음 → Vue로 갱신.</p>
+
+    <h3>결정 2: 9개 지표 모두 구현 vs 5개로 시작</h3>
+    <p><strong>선택</strong>: 9개 전부 구현 (공모전 사양 정합).</p>
+    <p><strong>근거</strong>: 컨셉_리포지셔닝.md의 평가지표 표를 100% 반영해야 심사위원에게 일관성 있는 작품이 됨.</p>
+
+    <h3>결정 3: tier proxy vs V1 raw 파생</h3>
+    <p><strong>선택</strong>: 파생.</p>
+    <p><strong>근거</strong>: 사용자가 "파생변수 만들었어?" 질문으로 proxy 한계 지적 → 진짜 raw에서 실측화. 결과 차이 큼 (예: 수원 통신 82→90, 광케이블 노드 인접도 반영).</p>
+
+    <h3>결정 4: KOSIS 막힘 시 우회</h3>
+    <p><strong>선택</strong>: SW회사 raw × 기업규모별 표준 종사자 추정.</p>
+    <p><strong>근거</strong>: Chrome MCP에서 kosis.kr 도메인 차단. SGIS 시도 → 생활업종(PC방·가구)이라 부적합. V1 raw에 기업규모 정보가 있어서 표준 종사자 곱하기로 추정 가능.</p>
+
+    <h3>결정 5: docs/ 정적 HTML</h3>
+    <p><strong>선택</strong>: <code>docs/</code> 폴더에 index + 9개 페이지.</p>
+    <p><strong>근거</strong>: 사용자 요청 — "정식 서비스 아닌 docs용". Vue 앱과 분리, 빌드 없이 바로 열림.</p>
+
+    <h2>버려진 시도</h2>
+    <ul>
+      <li><strong>data.go.kr SGIS 생활업종 종사자수 순위</strong> — 다운로드 성공했으나 IT 인력 지표로 부적합. 삭제.</li>
+      <li><strong>data.go.kr 표준데이터 CSV 버튼 직접 클릭</strong> — 처음엔 JS 클릭이 freeze. 좌표 클릭으로 우회 성공.</li>
+      <li><strong>모든 지표 한 번에 9개 확장 시도</strong> — proxy 한계가 사용자에게 발각됨. 실데이터 파생으로 재작업.</li>
+    </ul>
+
+    <h2>학습된 교훈</h2>
+    <div class="callout">
+      <strong>1. "구현 완료" 표현 주의:</strong> proxy를 실데이터처럼 표현하면 안 됨. 명확히 "tier 기반 추정" 명시.
+    </div>
+    <div class="callout">
+      <strong>2. 폴더 통합은 git mv로:</strong> 326개 파일을 rename으로 추적해 히스토리 보존. 단순 mv는 add+rm으로 보임.
+    </div>
+    <div class="callout">
+      <strong>3. Vue HMR + Pinia state:</strong> store 구조 변경 시 페이지 강제 리로드 필요. 초기화 의존 코드는 <code>load()</code>에 집중.
+    </div>
+    <div class="callout">
+      <strong>4. ECharts 0×0 버그:</strong> v-show로 hidden 컨테이너에서 mount하면 canvas 0. v-if로 매번 mount.
+    </div>
+    <div class="callout">
+      <strong>5. 도메인 차단은 우회:</strong> KOSIS 막혔지만 data.go.kr 가능. 항상 alternative 출처 탐색.
+    </div>
+
+    <footer class="doc-footer">
+      <a class="prev" href="07-results.html">
+        <div class="dir">← 이전</div><div>현재 결과 Top 10</div>
+      </a>
+      <a class="next" href="09-roadmap.html">
+        <div class="dir">다음 →</div><div>TODO 로드맵</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · 9개 평가지표 상세 — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html" class="active"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">02 · INDICATORS</div>
+      <h1><span class="doc-num">02</span>9개 평가지표 상세</h1>
+      <p class="lead">전체 9개. 각 지표의 의미·방향·가중치·산출 방법·구현 상태.</p>
+    </header>
+
+    <h2>전체 요약표</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>지표</th><th>카테고리</th><th>방향</th><th>기본 가중치</th><th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="tabular">1</td><td><strong>전력 안정성</strong></td><td>전력</td><td>↑ 좋음</td><td class="tabular">18%</td><td><span class="tag real">실측</span></td></tr>
+        <tr><td class="tabular">2</td><td>자연재해 위험</td><td>안전</td><td>↓ 좋음</td><td class="tabular">10%</td><td><span class="tag v1">V1</span></td></tr>
+        <tr><td class="tabular">3</td><td>평균기온</td><td>환경</td><td>↓ 좋음</td><td class="tabular">8%</td><td><span class="tag v1">V1</span></td></tr>
+        <tr><td class="tabular">4</td><td>토지 비용</td><td>비용</td><td>↓ 좋음</td><td class="tabular">10%</td><td><span class="tag v1">V1</span></td></tr>
+        <tr><td class="tabular">5</td><td>산업 집적도</td><td>산업</td><td>↑ 좋음</td><td class="tabular">10%</td><td><span class="tag real">실측</span></td></tr>
+        <tr><td class="tabular">6</td><td>통신 인프라</td><td>통신</td><td>↑ 좋음</td><td class="tabular">9%</td><td><span class="tag real">실측</span></td></tr>
+        <tr><td class="tabular">7</td><td>IT 인력</td><td>인력</td><td>↑ 좋음</td><td class="tabular">8%</td><td><span class="tag real">실측</span></td></tr>
+        <tr><td class="tabular">8</td><td><strong>지역활력</strong> ★</td><td>지역활력</td><td>↑ 좋음</td><td class="tabular">18%</td><td><span class="tag official">행안부 공식</span></td></tr>
+        <tr><td class="tabular">9</td><td>재생에너지</td><td>ESG</td><td>↑ 좋음</td><td class="tabular">9%</td><td><span class="tag real">실측</span></td></tr>
+      </tbody>
+    </table>
+    <p class="callout note">★ <strong>지역활력</strong>은 14회 공모전 주제 직격 지표 — 가중치 18%로 최상위 (전력 안정성과 동률).</p>
+
+    <h2>1. 전력 안정성 <small>(power_stability)</small></h2>
+    <p><strong>의미</strong>: 데이터센터 운영의 핵심 — 변전소·송전망 인프라가 충분한 시군일수록 안정적.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 18%.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>입력: V1 <code>2012-2022전국.csv</code> (55,132행, 시군구·연월·계약구분·사용량 kWh)</li>
+      <li>광역시 자치구는 광역시명으로 합산</li>
+      <li>연간 사용량 시계열에서 3가지 특성 추출:
+        <ul>
+          <li>평균 사용량 (절대 인프라 크기)</li>
+          <li>5년 추세 (선형 회귀 slope ÷ 평균) — 증가 = 산업 성장</li>
+          <li>변동성 (CV = stdev ÷ 평균) — 낮을수록 안정</li>
+        </ul>
+      </li>
+      <li>합성: <code>점수 = 평균×0.5 + 추세×0.3 + (1−변동성)×0.2</code></li>
+      <li>109개 시군 min-max 정규화 → 0~100</li>
+    </ul>
+
+    <h2>2. 자연재해 위험 <small>(disaster_risk)</small></h2>
+    <p><strong>의미</strong>: 태풍 + 지진 위험도 평균. 데이터센터는 자연재해에 취약.</p>
+    <p><strong>방향</strong>: 낮을수록 좋음. <strong>가중치</strong>: 10%.</p>
+    <p><strong>산출</strong>: V1 <code>가중치데이터_최종.csv</code>의 <code>지진위험도(z)</code> + <code>태풍위험도(z)</code> 단순 평균.</p>
+
+    <h2>3. 평균기온 <small>(temp)</small></h2>
+    <p><strong>의미</strong>: 데이터센터 냉각 비용에 직결. 평균기온 낮을수록 자연 냉각 비용 ↓.</p>
+    <p><strong>방향</strong>: 낮을수록 좋음. <strong>가중치</strong>: 8%.</p>
+    <p><strong>산출</strong>: V1 <code>가중치데이터_최종.csv</code>의 <code>평균기온(°C)</code> 그대로.</p>
+
+    <h2>4. 토지 비용 <small>(price)</small></h2>
+    <p><strong>의미</strong>: 부지 확보 초기 투자. 시군별 실거래가 평균 사용.</p>
+    <p><strong>방향</strong>: 낮을수록 좋음. <strong>가중치</strong>: 10%.</p>
+    <p><strong>산출</strong>: V1 <code>가중치데이터_최종.csv</code>의 <code>거래금액(만원)</code>.</p>
+
+    <h2>5. 산업 집적도 <small>(companies)</small></h2>
+    <p><strong>의미</strong>: 주변 SW·AI 기업 생태계. 산업 클러스터 효과.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 10%.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>V1 <code>SW회사.csv</code> raw 40,722 회사 — 주소 정규식으로 시·도 + 시·군 파싱</li>
+      <li>광역시 자치구 → 광역시로 합산</li>
+      <li>기업규모별 가중 카운트: 대=3 / 중견=2 / 중소=1</li>
+      <li>min-max 정규화. UI에는 raw 회사 수도 같이 노출.</li>
+    </ul>
+    <div class="callout">
+      <strong>왜 가중치를 곱하나:</strong> 대기업 본사 1개 = 중소 3개 무게. 이래야 사업 규모·지역 영향력
+      차이가 반영됨 (단순 카운트는 1인 스타트업 영향 과대평가).
+    </div>
+
+    <h2>6. 통신 인프라 <small>(telecom_infra)</small></h2>
+    <p><strong>의미</strong>: 데이터센터 ↔ 인터넷 백본 연결성. 광케이블 노드 인접도 proxy.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 9%.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>V1 <code>광케이블.csv</code> 66 노드 (지역명 + 위도/경도)</li>
+      <li>각 시군 중심점 ↔ 모든 노드 haversine 거리 계산</li>
+      <li>점수 = 50km내 노드×2 + 100km내×1 + 최근접 보너스</li>
+      <li>109 시군 min-max 정규화</li>
+    </ul>
+
+    <h2>7. IT 인력 <small>(it_workforce)</small></h2>
+    <p><strong>의미</strong>: IT 종사자 공급. 산업집적도와 다른 신호 — <strong>대기업 비중 가중</strong>.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 8%.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>V1 <code>SW회사.csv</code> raw + <strong>기업규모별 표준 종사자 수</strong> 곱</li>
+      <li>대기업 = 1,500명 / 중견 = 250명 / 중소 = 18명 (한국 IT 업계 평균 추정)</li>
+      <li>시군별 합계 = 추정 IT 종사자 수</li>
+      <li><code>log1p</code> 정규화 (서울/판교 압도 완화)</li>
+    </ul>
+    <div class="callout">
+      <strong>산업 집적도와 다른 시그널:</strong>
+      성남시는 산업집적도 10이지만 IT인력 81 (판교 대기업 비중 ↑). 대전 11→73 (KAIST·연구단지).
+      두 지표가 진짜로 다른 정보를 줌.
+    </div>
+
+    <h2>8. 지역활력 <small>(regional_vitality)</small> ★</h2>
+    <p><strong>의미</strong>: 데이터센터 유치가 지역 활성화에 미치는 기여도. 인구감소지역 = 데이터센터로 일자리·세수 효과 큼.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 18% — <strong>14회 공모전 주제 직격</strong>.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>행안부 2021-11 지정 <strong>89개 인구감소지역</strong> 공식 리스트</li>
+      <li>본 109개 시군 데이터셋과 교차 매칭 → 44개 인구감소지역 식별</li>
+      <li>지정 = 100점, 비지정 군 = 55, 중소시 = 35, 주요도시 = 15, 광역시 = 5 (단계적 차등)</li>
+    </ul>
+
+    <h2>9. 재생에너지 <small>(renewable_access)</small></h2>
+    <p><strong>의미</strong>: RE100 대응 + ESG. 데이터센터 빅테크들의 재생에너지 PPA 요구.</p>
+    <p><strong>방향</strong>: 높을수록 좋음. <strong>가중치</strong>: 9%.</p>
+    <p><strong>산출</strong>:</p>
+    <ul>
+      <li>공공데이터포털 <strong>전국태양광발전소전기사업허가정보표준데이터</strong> 50,000 발전소 raw</li>
+      <li>정상가동 47,705개만 카운트</li>
+      <li><code>제공기관명</code> ("전북특별자치도 익산시")에서 시군 추출</li>
+      <li>점수 = <code>log1p(count)×0.5 + log1p(capa_kw/100)×0.5</code></li>
+      <li>109 시군 min-max 정규화</li>
+    </ul>
+
+    <h2>가중치 설계 근거</h2>
+    <table>
+      <thead><tr><th>가중치 구간</th><th>지표</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td class="tabular">18%</td><td>전력 안정성 · 지역활력</td><td>데이터센터 입지의 본질 (전력) + 공모전 주제 정합 (지역활력)</td></tr>
+        <tr><td class="tabular">10%</td><td>자연재해 · 토지비용 · 산업집적도</td><td>전통적 핵심 입지 요인</td></tr>
+        <tr><td class="tabular">9%</td><td>통신 · 재생에너지</td><td>중요하지만 시군별 차이가 크지 않은 요인</td></tr>
+        <tr><td class="tabular">8%</td><td>기온 · IT 인력</td><td>2차 영향 요인</td></tr>
+      </tbody>
+    </table>
+    <p>합 100%. 사용자가 슬라이더로 자유 조정 가능, 합이 100이 아니어도 정규화로 처리.</p>
+
+    <footer class="doc-footer">
+      <a class="prev" href="01-overview.html">
+        <div class="dir">← 이전</div><div>프로젝트 개요</div>
+      </a>
+      <a class="next" href="03-data-sources.html">
+        <div class="dir">다음 →</div><div>데이터 소스</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 · 프로젝트 개요 — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html" class="active"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">01 · OVERVIEW</div>
+      <h1><span class="doc-num">01</span>프로젝트 개요</h1>
+      <p class="lead">왜 이 프로젝트를 시작했고, 14회 공모전 주제와 어떻게 맞추는가.</p>
+    </header>
+
+    <h2>한 줄 요약</h2>
+    <p>
+      AI 산업 폭증으로 데이터센터 수요가 급증하지만 60%가 수도권에 집중되어 전력계통 부담과 지역 불균형이 심화됨.
+      본 프로젝트는 산업통상부 산하 공공데이터를 활용해 <strong>지역활력 기여도까지 반영한 다기준 입지 평가 모델</strong>을 구축하고,
+      정책 담당자가 직접 후보지를 탐색·시뮬레이션할 수 있는 <strong>인터랙티브 의사결정 지원 대시보드</strong>를 제공한다.
+    </p>
+
+    <h2>14회 공모전 핵심 정보</h2>
+    <table>
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>주최</td><td>산업통상자원부</td></tr>
+        <tr><td>주제</td><td>"공공데이터로 견인하는 <strong>지역활력</strong>, AI 데이터로 도약하는 <strong>기업 성장</strong>"</td></tr>
+        <tr><td>참가 부문</td><td>아이디어 기획 / <strong>제품·서비스 개발 (본 참가)</strong></td></tr>
+        <tr><td>모집 기간</td><td>2026-03-30 ~ 2026-07-06</td></tr>
+        <tr><td>총 상금</td><td>5,700만원</td></tr>
+        <tr><td>대상</td><td>산업통상부 장관상</td></tr>
+        <tr><td>필수 조건</td><td><strong>산업부 + 산하 공공기관 데이터 활용 필수</strong></td></tr>
+        <tr><td>공식 사이트</td><td><a href="https://datacontest.kr">datacontest.kr</a></td></tr>
+      </tbody>
+    </table>
+
+    <h2>3대 메시지</h2>
+
+    <h3>1. WHY NOW — AI 산업 전환기, 인프라 분산이 필요</h3>
+    <ul>
+      <li>AI 학습/추론용 GPU 데이터센터 수요 급증</li>
+      <li>수도권 집중 → 전력 송전망 한계, 발전소 부담 가중</li>
+      <li>글로벌 빅테크의 한국 데이터센터 투자 확대 시점</li>
+    </ul>
+
+    <h3>2. WHY HERE — 데이터로 객관화된 후보지</h3>
+    <ul>
+      <li>단순 토지비/접근성이 아닌 <strong>다기준 평가</strong></li>
+      <li>산업부 산하 공공데이터 기반 → 정책 신뢰성 확보</li>
+      <li>가중치 민감도 분석으로 결과 견고성 입증 (슬라이더로 실시간)</li>
+    </ul>
+
+    <h3>3. WHAT NEXT — 정책으로 이어지는 분석</h3>
+    <ul>
+      <li>단순 후보지 나열에 그치지 않고 후보지별 <strong>정책 인센티브 패키지</strong>까지 제안 (예정)</li>
+      <li>한전 송전망 확충 우선순위 제안</li>
+      <li>지자체 인센티브 설계 가이드</li>
+    </ul>
+
+    <h2>차별화 포인트</h2>
+    <table>
+      <thead><tr><th>일반적인 입지 분석</th><th>본 프로젝트</th></tr></thead>
+      <tbody>
+        <tr><td>토지비/접근성/노동력 중심</td><td>+ <strong>지역활력 지표</strong> (행안부 인구감소지역)</td></tr>
+        <tr><td>수도권 위주</td><td>비수도권 시나리오 별도 분석 가능 (가중치 조절)</td></tr>
+        <tr><td>주관적 가중치</td><td>슬라이더로 사용자 실시간 조정 + 민감도 시각화</td></tr>
+        <tr><td>Top-N 후보지 도출에서 종료</td><td>후보지별 정책 제언 5종 패키지까지 (예정)</td></tr>
+        <tr><td>정적 지도 1장</td><td>인터랙티브 지도 + 차트 + 비교 모드</td></tr>
+        <tr><td>2022 데이터</td><td>2023~2025 + KEA 실데이터 (50k 발전소) 통합</td></tr>
+      </tbody>
+    </table>
+
+    <h2>참가 부문 선택 근거</h2>
+    <p>
+      <strong>제품·서비스 개발</strong> 부문 선택. 단순 분석 보고서가 아니라
+      "정책 담당자가 직접 가중치를 조정하며 탐색하는 도구" 포지셔닝으로 차별화.
+    </p>
+    <div class="callout">
+      <strong>공간 분석 단위:</strong> 시군 (109개 — V1 데이터셋 기준).
+      이유: 정책 단위 일치 / 데이터 결손 적음 / 인구감소지역 지정 단위와 동일 / 대시보드 UX 적합.
+    </div>
+
+    <h2>타깃 심사위원 페르소나</h2>
+    <ul>
+      <li>산업부 공공데이터 정책 담당자</li>
+      <li>빅데이터 분석 학계 인사</li>
+      <li>산업 전문가 (전력 / 통신 / AI)</li>
+    </ul>
+    <p>→ 통할 키워드: <strong>재현성 · 정책 시사점 · 데이터 거버넌스 · 산업 정합성</strong>.</p>
+
+    <footer class="doc-footer">
+      <a class="prev" href="index.html">
+        <div class="dir">← 이전</div><div>목차</div>
+      </a>
+      <a class="next" href="02-indicators.html">
+        <div class="dir">다음 →</div><div>9개 평가지표 상세</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

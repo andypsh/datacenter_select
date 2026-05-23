@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 · 분석 코드 (Python) — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html" class="active"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">04 · ANALYSIS</div>
+      <h1><span class="doc-num">04</span>분석 코드 (Python)</h1>
+      <p class="lead"><code>03_분석/</code> 폴더 내 4개 Python 모듈의 역할과 데이터 흐름.</p>
+    </header>
+
+    <h2>모듈 구성</h2>
+    <table>
+      <thead><tr><th>파일</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td><code>coords.py</code></td><td>109개 시군 → 위도/경도 매핑 테이블 (수기 작성)</td></tr>
+        <tr><td><code>extra_data.py</code></td><td>행안부 인구감소지역 set + 시군→광역도 매핑 + tier 분류</td></tr>
+        <tr><td><code>derived.py</code></td><td>V1 + KEA raw → 5개 파생 지표 (전력·통신·산업·IT·재생) 계산</td></tr>
+        <tr><td><code>build_scores.py</code></td><td>모든 지표 결합 → <code>regions.json</code> 출력</td></tr>
+      </tbody>
+    </table>
+
+    <h2>실행 흐름</h2>
+    <pre><code>cd 03_분석
+pip install -r requirements.txt
+python build_scores.py
+# → 04_시각화/frontend/public/data/regions.json (109 시군 × 9 지표)</code></pre>
+
+    <h2>데이터 흐름도</h2>
+    <pre><code>V1 _v1_data/                       02_데이터/raw/                extra_data.py
+├ 가중치데이터_최종.csv             KEA_신재생/                  ├ POPULATION_DECLINE
+├ 2012-2022전국.csv                 └ 전국태양광...csv           ├ REGION_PROVINCE
+├ 광케이블.csv                        ↓                          └ tier()
+└ SW회사.csv                          ↓                              ↓
+       ↓                              ↓                              ↓
+       ↓                              ↓                              ↓
+       └────────── derived.py ────────┴────────────────────────────┘
+                       ↓
+                   build_scores.py
+                       ↓
+              regions.json (109 × 9)
+                       ↓
+              04_시각화/frontend</code></pre>
+
+    <h2>coords.py</h2>
+    <p>109개 시군의 위경도. 시청·군청 위치 기준 근사. geopandas 사용 안 함 — 단순 dict.</p>
+    <pre><code>COORDS: dict[str, tuple[float, float]] = {
+    "가평군": (37.831, 127.510),
+    "경산시": (35.825, 128.741),
+    ...
+    "횡성군": (37.491, 127.985),
+}</code></pre>
+    <div class="callout note">
+      향후 행정구역 GeoJSON으로 폴리곤 채색을 도입하면 이 좌표는 폴리곤 centroid로 대체.
+    </div>
+
+    <h2>extra_data.py</h2>
+    <p>실데이터화 이전엔 5개 신규 지표의 proxy를 다 담았으나, 현재는 2개로 축소:</p>
+    <ol>
+      <li><code>REGION_PROVINCE</code>: 시군 → 광역도 매핑 (광역시 자치구 합산용)</li>
+      <li><code>POPULATION_DECLINE</code>: 행안부 89개 중 본 데이터셋 44개 매칭 set</li>
+      <li><code>regional_vitality(name)</code>: 인구감소 = 100, 그 외 tier별 차등 (5~55)</li>
+    </ol>
+    <pre><code>def regional_vitality(name: str) -> float:
+    if name in POPULATION_DECLINE:
+        return 100.0
+    if tier(name) == 4:    return 55.0   # 군 단위
+    if tier(name) == 3:    return 35.0   # 중소시
+    if tier(name) == 2:    return 15.0   # 주요도시
+    return 5.0                            # 광역시</code></pre>
+
+    <h2>derived.py — 5개 실데이터 파생 함수</h2>
+    <p>핵심 모듈. V1 + KEA raw에서 5개 지표를 실측 파생.</p>
+
+    <h3>1. power_stability_real (전력 안정성)</h3>
+    <pre><code>@lru_cache(maxsize=1)
+def _power_features() -> dict[str, dict[str, float]]:
+    df = _power_raw()                          # 55k 행 시계열
+    yearly = df.groupby(["region", "년"])["사용량(kWh)"].sum().reset_index()
+
+    out = {}
+    for region, sub in yearly.groupby("region"):
+        avg = sub["사용량(kWh)"].mean()
+        slope = linreg(년, 사용량) / avg       # 연 평균 대비 증가율
+        cv = sub["사용량(kWh)"].std() / avg    # 변동계수
+        out[region] = {"avg_usage": avg, "trend": slope, "cv": cv}
+    return out
+
+def power_stability_real(name: str) -> float:
+    # 정규화 후 가중평균: 평균 0.5 + 추세 0.3 + (1-CV) 0.2</code></pre>
+
+    <h3>2. telecom_infra_real (통신 인프라)</h3>
+    <pre><code>def telecom_infra_real(name: str) -> float:
+    nodes = _telecom_nodes()                    # 66 광케이블 노드
+    lat, lng = COORDS[name]
+    dists = [haversine(lat, lng, n_lat, n_lng) for n_lat, n_lng in nodes]
+    within_50  = sum(1 for d in dists if d <= 50)
+    within_100 = sum(1 for d in dists if d <= 100)
+    nearest    = min(dists)
+    # 점수: 50km × 2 + 100km × 1 + 최근접 보너스</code></pre>
+
+    <h3>3. industry_cluster_real (산업 집적도)</h3>
+    <pre><code>SIZE_WEIGHT = {"대기업": 3.0, "중견기업": 2.0, "중소기업": 1.0}
+
+def _industry_features():
+    df = pd.read_csv(SW_CSV, encoding="cp949")
+    df["region"] = parse_addr(df["주소"])      # 정규식
+    return df.groupby("region").agg(
+        count=("회사명", "count"),
+        weighted=("기업규모", lambda s: s.map(SIZE_WEIGHT).sum()),
+        large=("기업규모", lambda s: (s == "대기업").sum()),
+    )</code></pre>
+
+    <h3>4. it_workforce_real (IT 인력)</h3>
+    <pre><code>WORKFORCE_PER_FIRM = {"대기업": 1500, "중견기업": 250, "중소기업": 18}
+
+def _workforce_features():
+    # SW회사 동일 처리, 가중치만 다름
+    estimated = (대기업 × 1500) + (중견 × 250) + (중소 × 18)
+    # log1p 정규화 (서울/판교 압도 완화)</code></pre>
+
+    <h3>5. renewable_access_real (재생에너지)</h3>
+    <pre><code>def _solar_features():
+    df = pd.read_csv(SOLAR_CSV, encoding="cp949")
+    df = df[df["가동상태구분명"] == "정상가동"]
+    df["region"] = df["제공기관명"].map(extract_region)   # "전북특별자치도 익산시" → "익산시"
+    return df.groupby("region").agg(
+        count=("발전시설명", "count"),
+        capa_kw=("설비용량", "sum"),
+    )
+
+def renewable_access_real(name: str) -> float:
+    score = 0.5 * log1p(count) + 0.5 * log1p(capa_kw / 100)</code></pre>
+
+    <h2>build_scores.py</h2>
+    <p>모든 지표를 합쳐 <code>regions.json</code>으로 출력. <code>FACTORS</code> 리스트는 9개 지표 메타데이터.</p>
+    <pre><code>FACTORS = [
+    {"key": "power_stability", "label": "전력 안정성", "default_weight": 18, ...},
+    {"key": "disaster_risk",   "label": "자연재해 위험", "default_weight": 10, ...},
+    ...
+]
+assert sum(f["default_weight"] for f in FACTORS) == 100   # 100% 검증
+
+for _, row in df.iterrows():
+    name = row["name"]
+    factors_value = {
+        "power_stability":  power_stability_real(name),
+        "disaster_risk":    (row["earthquake_z"] + row["typhoon_z"]) / 2,
+        "temp":             row["temp"],
+        "price":            row["price"],
+        "companies":        industry_raw_count(name),
+        "telecom_infra":    telecom_infra_real(name),
+        "it_workforce":     it_workforce_real(name),
+        "regional_vitality": regional_vitality(name),
+        "renewable_access": renewable_access_real(name),
+    }</code></pre>
+
+    <h2>의존성</h2>
+    <pre><code># 03_분석/requirements.txt
+pandas>=2.2,<3
+numpy>=1.26,<3
+geopandas>=1.0,<2    # 현재 미사용 (향후 폴리곤 채색용)
+shapely>=2.0,<3
+pyproj>=3.6,<4
+matplotlib>=3.8,<4
+folium>=0.17,<1
+openpyxl>=3.1,<4</code></pre>
+
+    <footer class="doc-footer">
+      <a class="prev" href="03-data-sources.html">
+        <div class="dir">← 이전</div><div>데이터 소스</div>
+      </a>
+      <a class="next" href="05-frontend.html">
+        <div class="dir">다음 →</div><div>프론트엔드 (Vue)</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>

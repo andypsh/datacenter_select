@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 · 프론트엔드 (Vue) — 기술 문서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">📑 기술 문서</div>
+    <div class="sub">제14회 산자부 공공데이터 공모전</div>
+    <nav>
+      <ol>
+        <li><a href="index.html"><span class="num">00</span>목차</a></li>
+        <li><a href="01-overview.html"><span class="num">01</span>프로젝트 개요</a></li>
+        <li><a href="02-indicators.html"><span class="num">02</span>9개 평가지표 상세</a></li>
+        <li><a href="03-data-sources.html"><span class="num">03</span>데이터 소스</a></li>
+        <li><a href="04-analysis.html"><span class="num">04</span>분석 코드 (Python)</a></li>
+        <li><a href="05-frontend.html" class="active"><span class="num">05</span>프론트엔드 (Vue)</a></li>
+        <li><a href="06-scoring.html"><span class="num">06</span>점수 계산 로직</a></li>
+        <li><a href="07-results.html"><span class="num">07</span>현재 결과 Top 10</a></li>
+        <li><a href="08-history.html"><span class="num">08</span>V1 → V2 마이그레이션</a></li>
+        <li><a href="09-roadmap.html"><span class="num">09</span>TODO 로드맵</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="crumb">05 · FRONTEND</div>
+      <h1><span class="doc-num">05</span>프론트엔드 (Vue)</h1>
+      <p class="lead">Vue 3 + Vite + TypeScript SPA. <code>04_시각화/frontend/</code>. 가중치 조절 + 지도 + 차트 + 비교.</p>
+    </header>
+
+    <h2>기술 스택 결정</h2>
+    <table>
+      <thead><tr><th>영역</th><th>선택</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td>프레임워크</td><td>Vue 3 + Vite + TypeScript</td><td>컴포넌트화, 빠른 HMR, 타입 안정성</td></tr>
+        <tr><td>지도</td><td>MapLibre GL</td><td>오픈소스, OSM 호환, WebGL 모던 렌더</td></tr>
+        <tr><td>차트</td><td>ECharts (vue-echarts)</td><td>막대/산점/레이더/시계열 지원, 다크 한글 OK</td></tr>
+        <tr><td>상태</td><td>Pinia</td><td>Vue 3 표준, 반응성 자연스러움</td></tr>
+        <tr><td>스타일</td><td>Tailwind CSS</td><td>UI 빠른 반복</td></tr>
+        <tr><td>배포</td><td>GitHub Pages (예정)</td><td>정적 자산만 호스팅, 무료, 푸시→자동 배포</td></tr>
+      </tbody>
+    </table>
+
+    <h2>왜 Vue (vs Streamlit)?</h2>
+    <p>이전 세션에서 Streamlit 후보가 있었으나 다음 비교로 Vue 확정:</p>
+    <table>
+      <thead><tr><th>기준</th><th>Vue 3 (선택)</th><th>Streamlit (대안)</th></tr></thead>
+      <tbody>
+        <tr><td>반응성</td><td>슬라이더↔지도 ms 단위</td><td>매 슬라이더에 페이지 재실행</td></tr>
+        <tr><td>지도 인터랙션</td><td>MapLibre 풀 컨트롤</td><td>folium iframe 제약</td></tr>
+        <tr><td>디자인 자유도</td><td>Tailwind + 커스텀</td><td>위젯 디자인 제약</td></tr>
+        <tr><td>배포</td><td>정적 호스팅 (영구 무료)</td><td>Streamlit Cloud 리소스 제한</td></tr>
+        <tr><td>평가 인상</td><td>제품·서비스 도구</td><td>분석 노트북 느낌</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Node 16 호환 (현재 환경 제약)</h2>
+    <p>시스템 Node v16.14 — 최신 Vite 6는 Node 18+ 필요. 호환 버전으로 다운그레이드:</p>
+    <pre><code>// package.json (현재)
+{
+  "dependencies": {
+    "vue": "^3.4.38",
+    "maplibre-gl": "^3.6.2",
+    "vue-echarts": "^6.7.3",
+    "pinia": "^2.2.6",
+    "echarts": "^5.5.1"
+  },
+  "devDependencies": {
+    "vite": "^4.5.5",
+    "@vitejs/plugin-vue": "^4.6.2",
+    "vue-tsc": "^1.8.27",
+    "typescript": "~5.2.2",
+    ...
+  }
+}</code></pre>
+    <p class="callout warn">
+      <strong>Node 20 LTS 업그레이드 후</strong> Vite 6 / vue-tsc 2 등 최신으로 복귀 가능. 코드 변경 불필요.
+    </p>
+
+    <h2>폴더 구조</h2>
+    <pre><code>04_시각화/frontend/
+├── index.html                  # 진입점 (Pretendard 폰트 + #app)
+├── vite.config.ts              # PORT 환경변수 우선, strictPort: false
+├── tsconfig.json
+├── tailwind.config.js
+├── postcss.config.js
+├── package.json
+├── public/
+│   └── data/regions.json       # ← build_scores.py 산출물
+└── src/
+    ├── main.ts                 # createApp + Pinia mount
+    ├── App.vue                 # 탭 라우터 (지도/대시보드/비교)
+    ├── style.css               # @tailwind + 다크 base
+    ├── env.d.ts                # vite types
+    ├── types.ts                # FactorKey, Region, ScoredRegion
+    ├── stores/
+    │   └── scoring.ts          # 가중치 → 점수 (반응형)
+    └── components/
+        ├── MapView.vue         # MapLibre 지도
+        ├── WeightPanel.vue     # 슬라이더 + Top 10
+        ├── Dashboard.vue       # ECharts 3개 차트
+        └── CompareView.vue     # 레이더 + 비교 표</code></pre>
+
+    <h2>App.vue — 탭 라우팅</h2>
+    <pre><code>const tab = ref<"map" | "dashboard" | "compare">("map");
+
+// MapView는 KeepAlive로 캐시 (지도 줌 상태 보존)
+// Dashboard/Compare는 v-if로 매번 fresh mount (ECharts 0×0 버그 회피)
+&lt;section&gt;
+  &lt;KeepAlive&gt;
+    &lt;MapView v-if="tab === 'map'" key="map" /&gt;
+  &lt;/KeepAlive&gt;
+  &lt;Dashboard v-if="tab === 'dashboard'" /&gt;
+  &lt;CompareView v-if="tab === 'compare'" /&gt;
+&lt;/section&gt;</code></pre>
+
+    <h2>Pinia store: scoring.ts</h2>
+    <p>유일한 진실 소스. 가중치 슬라이더 → 정규화 → 가중평균 점수 → 모든 컴포넌트 반응.</p>
+    <pre><code>export const useScoringStore = defineStore("scoring", () => {
+  const factors = ref&lt;Factor[]&gt;([]);              // payload.factors
+  const regions = ref&lt;Region[]&gt;([]);              // 109 시군
+  const weights = ref&lt;Record&lt;FactorKey, number&gt;&gt;({});  // 동적 (payload.factors[].default_weight 로드)
+  const compareSet = ref&lt;Set&lt;string&gt;&gt;(new Set());
+
+  // computed: 정규화된 [0,1] 행렬
+  const normalized = computed(() => { ... });
+
+  // computed: 시군별 종합점수 + 순위
+  const scored = computed&lt;ScoredRegion[]&gt;(() => { ... });
+
+  // computed: Top 10
+  const topN = computed(() => [...scored.value].sort(...).slice(0, 10));
+
+  function setWeight(key, value) { weights.value[key] = value; }
+  function toggleCompare(name) { ... }
+});</code></pre>
+
+    <h2>MapView.vue — MapLibre</h2>
+    <ul>
+      <li>OSM raster 타일 (저작권 표시)</li>
+      <li>시군별 마커: 점수에 따라 색상(HSL hue 0→140) + 크기(8→30px)</li>
+      <li>호버: scale 1.25 / 클릭: <code>store.toggleCompare(name)</code></li>
+      <li>비교 모드 선택 시 파란 테두리 강조</li>
+      <li>좌하단 점수 색상 범례</li>
+    </ul>
+
+    <h2>WeightPanel.vue — 슬라이더 + Top 10</h2>
+    <ul>
+      <li>9개 factor 슬라이더 (range 0~50)</li>
+      <li>% 표시는 <code>weights[key] / weightSum × 100</code> (실시간 상대치)</li>
+      <li>Top 10 리스트 — 클릭하면 비교 모드 추가/제거</li>
+      <li>"기본값으로 초기화" 버튼</li>
+    </ul>
+
+    <h2>Dashboard.vue — 3개 차트</h2>
+    <ol>
+      <li><strong>Top 20 막대</strong>: 점수별 색상</li>
+      <li><strong>실거래가 vs 종합점수 산점</strong>: 토지비-점수 상관 시각화</li>
+      <li><strong>Top 10 vs Bottom 10 요인 평균</strong>: 강점/약점 패턴</li>
+    </ol>
+
+    <h2>CompareView.vue — 비교 모드</h2>
+    <ul>
+      <li>최대 3개 후보지 동시 비교</li>
+      <li>레이더 차트: 9개 지표 정규화 점수 (대전 vs 제천 같은 패턴 차이 즉시 보임)</li>
+      <li>표: 종합점수, 순위, 9개 raw 값 (단위 포함)</li>
+      <li>"비교 초기화" 버튼</li>
+    </ul>
+
+    <h2>HMR 주의사항</h2>
+    <div class="callout warn">
+      <strong>가중치 dynamic 로드</strong>: 코드 수정으로 store 구조 바뀌면 Pinia state가 stale.
+      브라우저 강제 리로드(F5) 필요. <code>scoring.ts</code>에서 <code>weights</code>는 <code>load()</code> 시점에
+      <code>payload.factors[].default_weight</code>로 초기화됨.
+    </div>
+    <div class="callout warn">
+      <strong>ECharts 0×0 버그</strong>: <code>v-show</code>로 숨긴 컨테이너에서 mount되면 canvas 크기가 0이 됨.
+      Dashboard/Compare는 <code>v-if</code>로 매번 새로 mount하여 회피. MapView만 KeepAlive (지도 줌 상태 보존).
+    </div>
+
+    <h2>빌드 / 실행</h2>
+    <pre><code>cd 04_시각화/frontend
+npm install
+npm run dev          # http://localhost:5173
+npm run build        # dist/ 정적 자산
+npm run typecheck    # vue-tsc 검증</code></pre>
+
+    <footer class="doc-footer">
+      <a class="prev" href="04-analysis.html">
+        <div class="dir">← 이전</div><div>분석 코드 (Python)</div>
+      </a>
+      <a class="next" href="06-scoring.html">
+        <div class="dir">다음 →</div><div>점수 계산 로직</div>
+      </a>
+    </footer>
+  </main>
+</div>
+</body>
+</html>
