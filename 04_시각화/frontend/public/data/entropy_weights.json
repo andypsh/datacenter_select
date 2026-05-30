@@ -1,0 +1,35 @@
+{
+  "weights": {
+    "power": 8.7,
+    "temp": 2.58,
+    "earthquake": 1.09,
+    "typhoon": 3.96,
+    "price": 0.69,
+    "industry": 23.62,
+    "companies": 47.32,
+    "vitality": 3.27,
+    "renewable": 8.78
+  },
+  "entropy": {
+    "power": 0.9253,
+    "temp": 0.9779,
+    "earthquake": 0.9906,
+    "typhoon": 0.966,
+    "price": 0.9941,
+    "industry": 0.7971,
+    "companies": 0.5936,
+    "vitality": 0.9719,
+    "renewable": 0.9246
+  },
+  "diversity": {
+    "power": 0.0747,
+    "temp": 0.0221,
+    "earthquake": 0.0094,
+    "typhoon": 0.034,
+    "price": 0.0059,
+    "industry": 0.2029,
+    "companies": 0.4064,
+    "vitality": 0.0281,
+    "renewable": 0.0754
+  }
+}
